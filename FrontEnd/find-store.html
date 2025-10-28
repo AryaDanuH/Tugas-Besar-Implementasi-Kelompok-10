@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temukan Toko - LibMatch</title>
+    <link rel="stylesheet" href="/FrontEnd/css/style.css">
+    <link rel="stylesheet" href="/FrontEnd/css/find-store.css">
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="header-top">
+            <div class="logo">LibMatch</div>
+            <div class="right-actions">
+                <button class="login-btn" onclick="window.location.href='/FrontEnd/login.html'">Login</button>
+                <span class="lang-text">ID</span>
+            </div>
+        </div>
+
+        <!-- STICKY DASHBOARD -->
+        <div class="dashboard-bar">
+            <div class="search-wrap">
+                <input type="text" placeholder="Cari berdasarkan penulis, judul, atau nama..." />
+            </div>
+
+            <nav class="main-nav">
+                <a href="/FrontEnd/index.html">Beranda</a>
+                <a href="/FrontEnd/bestseller.html">Bestseller</a>
+                <a href="/FrontEnd/kategori.html">Kategori</a>
+                <a href="/FrontEnd/find-store.html" class="active">Temukan Toko</a>
+                <a href="#">Buku Saya</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="find-store-main">
+        <div class="store-container">
+            <!-- LEFT SECTION: MAP -->
+            <div class="store-map-section">
+                <div class="map-header">
+                    <h2>Toko Terdekat</h2>
+                    <p>Lokasi Anda</p>
+                </div>
+                <div class="map-placeholder" id="mapContainer">
+                    <!-- Map will be embedded here -->
+                    <div class="map-content">
+                        <div class="map-icon">📍</div>
+                        <p>Peta Interaktif</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT SECTION: STORE LIST -->
+            <div class="store-list-section">
+                <div class="store-list-header">
+                    <h3>Toko Terdekat</h3>
+                    <p class="store-count">3 toko ditemukan</p>
+                </div>
+
+                <div class="store-list">
+                    <div class="store-card">
+                        <div class="store-name">LibMatch Central</div>
+                        <div class="store-address">Jl. Merdeka No. 123, Jakarta Pusat</div>
+                        <div class="store-distance">2.5 km dari lokasi Anda</div>
+                        <div class="store-hours">Buka: 09:00 - 21:00</div>
+                    </div>
+
+                    <div class="store-card">
+                        <div class="store-name">LibMatch Senayan</div>
+                        <div class="store-address">Jl. Asia Afrika No. 456, Jakarta Selatan</div>
+                        <div class="store-distance">4.2 km dari lokasi Anda</div>
+                        <div class="store-hours">Buka: 10:00 - 22:00</div>
+                    </div>
+
+                    <div class="store-card">
+                        <div class="store-name">LibMatch Kota</div>
+                        <div class="store-address">Jl. Hayam Wuruk No. 789, Jakarta Barat</div>
+                        <div class="store-distance">5.8 km dari lokasi Anda</div>
+                        <div class="store-hours">Buka: 08:00 - 20:00</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Tentang</h4>
+                <a href="#">Tentang Kami</a>
+                <a href="#">Bantuan</a>
+                <a href="#">Syarat</a>
+            </div>
+            <div class="footer-section">
+                <h4>Privasi</h4>
+                <a href="#">Kebijakan Privasi</a>
+                <a href="#">Kontak</a>
+            </div>
+            <div class="footer-social">
+                <a href="#" class="social-icon">f</a>
+                <a href="#" class="social-icon">🐦</a>
+                <a href="#" class="social-icon">in</a>
+                <a href="#" class="social-icon">𝕏</a>
+            </div>
+        </div>
+        <p>&copy; 2025 LibMatch. Semua hak dilindungi.</p>
+    </footer>
+    <script src="/FrontEnd/js/auth.js"></script>
+    <script>
+        function handleAuthClick() {
+            const user = getCurrentUser()
+            if (user) {
+                logout()
+            } else {
+                window.location.href = "/FrontEnd/login.html"
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const user = getCurrentUser()
+            const authBtn = document.getElementById("authBtn")
+            if (user && authBtn) {
+                authBtn.textContent = "Logout"
+            }
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil - LibMatch</title>
+    <link rel="stylesheet" href="/FrontEnd/css/style.css">
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="header-top">
+            <div class="logo">📚 LibMatch</div>
+            <div class="right-actions">
+                <div class="user-profile">
+                    <span id="userName" class="user-name">User</span>
+                    <a href="/FrontEnd/profile.html" class="profile-link">Profil</a>
+                    <button class="logout-btn" onclick="logout()">Logout</button>
+                </div>
+                <span class="lang-text">ID</span>
+            </div>
+        </div>
+
+        <!-- STICKY DASHBOARD -->
+        <div class="dashboard-bar">
+            <div class="search-wrap">
+                <input type="text" placeholder="Cari berdasarkan penulis, judul, atau nama..." />
+            </div>
+
+            <nav class="main-nav">
+                <a href="/FrontEnd/dashboard-logged-in.html">Beranda</a>
+                <a href="#">Bestseller</a>
+                <a href="#">Kategori</a>
+                <a href="#">Temukan Toko</a>
+                <a href="#">Buku Saya</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- PROFILE CONTENT -->
+    <main class="profile-main">
+        <div class="profile-container">
+            <div class="profile-header">
+                <h1>Profil Pengguna</h1>
+                <p>Kelola informasi profil Anda</p>
+            </div>
+
+            <div class="profile-card">
+                <!-- Added profile image upload section -->
+                <div class="profile-image-section">
+                    <div class="profile-image-container">
+                        <img id="profileImagePreview" src="/placeholder.svg?height=150&width=150" alt="Profile Image" class="profile-image">
+                        <label for="profileImageInput" class="profile-image-edit">
+                            <span>📷</span>
+                        </label>
+                        <input type="file" id="profileImageInput" accept="image/*" style="display: none;">
+                    </div>
+                    <p class="profile-image-hint">Klik ikon kamera untuk mengubah foto profil</p>
+                </div>
+
+                <form id="profileForm" class="profile-form">
+                    <div class="form-group">
+                        <label for="name">Nama Lengkap</label>
+                        <input type="text" id="name" name="name" placeholder="Masukkan nama lengkap Anda" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Nomor Telepon</label>
+                        <input type="tel" id="phone" name="phone" placeholder="Masukkan nomor telepon">
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Alamat</label>
+                        <textarea id="address" name="address" rows="4" placeholder="Masukkan alamat Anda"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="role">Role</label>
+                        <input type="text" id="role" name="role" disabled>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <p>&copy; 2025 LibMatch. Semua hak dilindungi.</p>
+    </footer>
+
+    <script src="/FrontEnd/js/auth.js"></script>
+    <script src="/FrontEnd/js/profile.js"></script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Peminjaman Saya - LibMatch</title>
+    <!-- Changed CSS path from /static/css/style.css to ./css/style.css (relative path) -->
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <nav class="navbar">
+            <div class="navbar-brand">
+                <h2> LibMatch</h2>
+            </div>
+            <ul class="navbar-menu">
+                <!-- Changed all navigation links from /static/...html to ./...html (relative paths) -->
+                <li><a href="./dashboard.html">Dashboard</a></li>
+                <li><a href="./books.html">Daftar Buku</a></li>
+                <li><a href="./my-borrowings.html" class="active">Peminjaman Saya</a></li>
+                <li><a href="./profile.html">Profil</a></li>
+                <li><a href="#" onclick="logout()">Logout</a></li>
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <div class="page-header">
+                <h1>Peminjaman Saya</h1>
+            </div>
+
+            <div class="tabs">
+                <button class="tab-btn active" onclick="filterTransactions('all')">Semua</button>
+                <button class="tab-btn" onclick="filterTransactions('borrowed')">Sedang Dipinjam</button>
+                <button class="tab-btn" onclick="filterTransactions('returned')">Sudah Dikembalikan</button>
+                <button class="tab-btn" onclick="filterTransactions('overdue')">Terlambat</button>
+            </div>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID Transaksi</th>
+                        <th>Tanggal Pinjam</th>
+                        <th>Tanggal Kembali</th>
+                        <th>Status</th>
+                        <th>Tipe Pengiriman</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="borrowingsTable">
+                    <tr><td colspan="6" class="text-center">Memuat data...</td></tr>
+                </tbody>
+            </table>
+        </main>
+    </div>
+    <!-- Changed script path from /static/js/borrowings.js to ./js/borrowings.js (relative path) -->
+    <script src="./js/borrowings.js"></script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - LibMatch</title>
+    <link rel="stylesheet" href="/FrontEnd/css/style.css">
+</head>
+<body>
+    <div class="login-container">
+        <!-- Left Section -->
+        <div class="login-left">
+            <button class="back-btn" onclick="window.location.href='/'">←</button>
+            <h1 class="brand">LibMatch</h1>
+            <img src="/FrontEnd/images/login-character.png" alt="LibMatch Character" class="login-illustration" />
+        </div>
+
+        <!-- Right Section -->
+        <div class="login-right">
+            <div class="login-box">
+                <h2>Hi Reader</h2>
+                <p class="welcome-text">Selamat datang di LIBMATCH</p>
+
+                <form id="loginForm" class="form">
+                    <div>
+                        <input type="email" id="email" name="email" placeholder="Masukkan email Anda" required>
+                    </div>
+                    <div>
+                        <input type="password" id="password" name="password" placeholder="Masukkan password Anda" required>
+                    </div>
+                    <a href="/FrontEnd/forget-password.html" class="forgot-link">Lupa Password?</a>
+
+                    <button type="submit" class="login-btn">Login</button>
+                </form>
+
+                <div class="divider">
+                    <hr><span>atau</span><hr>
+                </div>
+
+                <!-- Added social login buttons with proper styling -->
+                <div class="social-buttons">
+                    <button type="button" class="social-btn google-btn" onclick="alert('Google login akan diintegrasikan')">
+                        <img src="/FrontEnd/images/google-logo.png" alt="Google">
+                    </button>
+                    <button type="button" class="social-btn facebook-btn" onclick="alert('Facebook login akan diintegrasikan')">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                        </svg>
+                    </button>
+                    <button type="button" class="social-btn twitter-btn" onclick="alert('Twitter login akan diintegrasikan')">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M23.953 4.57a10 10 0 002.856-3.915 9.964 9.964 0 01-2.866.853c1.03-1.6 1.938-3.996 2.01-6.515H20.989a6.002 6.002 0 00-9.497 5.595c-5.592-.275-10.576-2.973-13.993-7.066a6.002 6.002 0 001.923 8.001c-.913-.023-1.946-.298-2.668-.652v.072c0 2.900 2.063 5.619 4.802 6.222a5.994 5.994 0 01-2.828.856 6.002 6.002 0 004.718 5.282c-1.946 1.565-4.589 1.883-6.488 1.432 1.143.681 2.545 1.107 4.032 1.107 4.917 0 7.598-4.807 7.598-8.986 0-.13-.003-.26-.009-.39a5.998 5.998 0 001.474-1.540z"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <p class="signup-text">
+                    Belum punya akun? <a href="/FrontEnd/register.html">Daftar di sini</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="/FrontEnd/js/auth.js"></script>
+</body>
+</html>

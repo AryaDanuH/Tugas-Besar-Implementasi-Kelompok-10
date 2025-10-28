@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buku Terlaris - LibMatch</title>
+    <link rel="stylesheet" href="/FrontEnd/css/style.css">
+    <link rel="stylesheet" href="/FrontEnd/css/bestseller.css">
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="header-top">
+            <div class="logo">LibMatch</div>
+            <div class="right-actions">
+                <button class="login-btn" onclick="window.location.href='/FrontEnd/login.html'">Login</button>
+                <span class="lang-text">ID</span>
+            </div>
+        </div>
+
+        <!-- STICKY DASHBOARD -->
+        <div class="dashboard-bar">
+            <div class="search-wrap">
+                <input type="text" placeholder="Cari berdasarkan penulis, judul, atau nama..." />
+            </div>
+
+            <nav class="main-nav">
+                <a href="/FrontEnd/index.html">Beranda</a>
+                <a href="/FrontEnd/bestseller.html" class="active">Bestseller</a>
+                <a href="/FrontEnd/kategori.html">Kategori</a>
+                <a href="/FrontEnd/find-store.html">Temukan Toko</a>
+                <a href="#">Buku Saya</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="bestseller-main">
+        <div class="bestseller-header">
+            <h1>Buku Terlaris</h1>
+            <p>Temukan buku-buku yang sedang trending dan paling banyak dibaca hari ini</p>
+        </div>
+
+        <!-- BESTSELLER GRID -->
+        <div class="bestseller-grid" id="bestsellerContainer">
+            <!-- Books will be populated here -->
+            <div class="book-item">
+                <div class="book-image">
+                    <img src="/FrontEnd/images/book-cover.png" alt="Pride and Prejudice">
+                </div>
+                <div class="book-info">
+                    <h3>Pride and Prejudice</h3>
+                    <p class="author">Jane Austen</p>
+                    <p class="description">Save of the</p>
+                </div>
+            </div>
+
+            <div class="book-item">
+                <div class="book-image">
+                    <img src="/FrontEnd/images/book-cover.png" alt="The Great Gatsby">
+                </div>
+                <div class="book-info">
+                    <h3>The Great Gatsby</h3>
+                    <p class="author">F. Scott Fitzgerald</p>
+                    <p class="description">Save of the</p>
+                </div>
+            </div>
+
+            <div class="book-item">
+                <div class="book-image">
+                    <img src="/FrontEnd/images/book-cover.png" alt="To Kill a Mockingbird">
+                </div>
+                <div class="book-info">
+                    <h3>To Kill a Mockingbird</h3>
+                    <p class="author">Harper Lee</p>
+                    <p class="description">Save of the</p>
+                </div>
+            </div>
+
+            <div class="book-item">
+                <div class="book-image">
+                    <img src="/FrontEnd/images/book-cover.png" alt="1984">
+                </div>
+                <div class="book-info">
+                    <h3>1984</h3>
+                    <p class="author">George Orwell</p>
+                    <p class="description">Save of the</p>
+                </div>
+            </div>
+
+            <div class="book-item">
+                <div class="book-image">
+                    <img src="/FrontEnd/images/book-cover.png" alt="Jane Eyre">
+                </div>
+                <div class="book-info">
+                    <h3>Jane Eyre</h3>
+                    <p class="author">Charlotte Brontë</p>
+                    <p class="description">Save of the</p>
+                </div>
+            </div>
+
+            <div class="book-item">
+                <div class="book-image">
+                    <img src="/FrontEnd/images/book-cover.png" alt="The Midnight Library">
+                </div>
+                <div class="book-info">
+                    <h3>The Midnight Library</h3>
+                    <p class="author">Matt Haig</p>
+                    <p class="description">Save of the</p>
+                </div>
+            </div>
+
+            <div class="book-item">
+                <div class="book-image">
+                    <img src="/FrontEnd/images/book-cover.png" alt="Atomic Habits">
+                </div>
+                <div class="book-info">
+                    <h3>Atomic Habits</h3>
+                    <p class="author">James Clear</p>
+                    <p class="description">Save of the</p>
+                </div>
+            </div>
+
+            <div class="book-item">
+                <div class="book-image">
+                    <img src="/FrontEnd/images/book-cover.png" alt="Educated">
+                </div>
+                <div class="book-info">
+                    <h3>Educated</h3>
+                    <p class="author">Tara Westover</p>
+                    <p class="description">Save of the</p>
+                </div>
+            </div>
+
+            <div class="book-item">
+                <div class="book-image">
+                    <img src="/FrontEnd/images/book-cover.png" alt="Sapiens">
+                </div>
+                <div class="book-info">
+                    <h3>Sapiens</h3>
+                    <p class="author">Yuval Noah Harari</p>
+                    <p class="description">Save of the</p>
+                </div>
+            </div>
+
+            <div class="book-item">
+                <div class="book-image">
+                    <img src="/FrontEnd/images/book-cover.png" alt="Thinking, Fast and Slow">
+                </div>
+                <div class="book-info">
+                    <h3>Thinking, Fast and Slow</h3>
+                    <p class="author">Daniel Kahneman</p>
+                    <p class="description">Save of the</p>
+                </div>
+            </div>
+
+            <div class="book-item">
+                <div class="book-image">
+                    <img src="/FrontEnd/images/book-cover.png" alt="The Hobbit">
+                </div>
+                <div class="book-info">
+                    <h3>The Hobbit</h3>
+                    <p class="author">J.R.R. Tolkien</p>
+                    <p class="description">Save of the</p>
+                </div>
+            </div>
+
+            <div class="book-item">
+                <div class="book-image">
+                    <img src="/FrontEnd/images/book-cover.png" alt="Harry Potter">
+                </div>
+                <div class="book-info">
+                    <h3>Harry Potter</h3>
+                    <p class="author">J.K. Rowling</p>
+                    <p class="description">Save of the</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Tentang</h4>
+                <a href="#">Tentang Kami</a>
+                <a href="#">Bantuan</a>
+                <a href="#">Syarat</a>
+            </div>
+            <div class="footer-section">
+                <h4>Privasi</h4>
+                <a href="#">Kebijakan Privasi</a>
+                <a href="#">Kontak</a>
+            </div>
+            <div class="footer-social">
+                <a href="#" class="social-icon">f</a>
+                <a href="#" class="social-icon">🐦</a>
+                <a href="#" class="social-icon">in</a>
+                <a href="#" class="social-icon">𝕏</a>
+            </div>
+        </div>
+        <p>&copy; 2025 LibMatch. Semua hak dilindungi.</p>
+    </footer>
+
+    <script src="/FrontEnd/js/auth.js"></script>
+    <script>
+        function handleAuthClick() {
+            const user = getCurrentUser()
+            if (user) {
+                logout()
+            } else {
+                window.location.href = "/FrontEnd/login.html"
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const user = getCurrentUser()
+            const authBtn = document.getElementById("authBtn")
+            if (user && authBtn) {
+                authBtn.textContent = "Logout"
+            }
+        })
+    </script>
+</body>
+</html>

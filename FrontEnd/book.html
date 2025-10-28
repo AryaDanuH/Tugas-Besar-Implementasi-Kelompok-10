@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Buku - LibMatch</title>
+    <!-- Updated CSS path to absolute path for proper loading -->
+    <link rel="stylesheet" href="/FrontEnd/css/style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <nav class="navbar">
+            <div class="navbar-brand">
+                <h2>📚 LibMatch</h2>
+            </div>
+            <ul class="navbar-menu">
+                <!-- Fixed all navbar links to use absolute paths -->
+                <li><a href="/FrontEnd/dashboard.html">Dashboard</a></li>
+                <li><a href="/FrontEnd/books.html" class="active">Daftar Buku</a></li>
+                <li><a href="/FrontEnd/my-borrowings.html">Peminjaman Saya</a></li>
+                <li><a href="/FrontEnd/profile.html">Profil</a></li>
+                <li><a href="#" onclick="logout()">Logout</a></li>
+            </ul>
+        </nav>
+
+        <main class="main-content">
+            <div class="page-header">
+                <h1>Daftar Buku</h1>
+                <div class="search-filter">
+                    <input type="text" id="searchInput" placeholder="Cari buku berdasarkan judul atau penulis..." class="search-input">
+                    <select id="categoryFilter" class="filter-select">
+                        <option value="">Semua Kategori</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="books-grid" id="booksContainer">
+                <p class="text-center">Memuat buku...</p>
+            </div>
+        </main>
+    </div>
+
+    <div id="bookModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="bookDetails"></div>
+            <div class="modal-actions">
+                <button class="btn btn-primary" onclick="borrowBook()">Pinjam Buku</button>
+                <button class="btn btn-secondary" onclick="closeModal()">Tutup</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fixed script path from ./js/books.js to /FrontEnd/js/books.js -->
+    <script src="/FrontEnd/js/books.js"></script>
+</body>
+</html>
