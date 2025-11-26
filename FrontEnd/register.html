@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar - LibMatch</title>
+    <link rel="stylesheet" href="/FrontEnd/css/style.css">
+</head>
+<body>
+    <!-- Changed to split layout similar to login page with character illustration on left -->
+    <div class="login-container">
+        <!-- Left Section with Character -->
+        <div class="login-left">
+            <!-- Changed back button to use window.location.href='/' for reliable navigation to dashboard -->
+            <h1 class="brand">LibMatch</h1>
+            <img src="/FrontEnd/images/login-character.png" alt="LibMatch Character" class="login-illustration" />
+        </div>
+
+        <!-- Right Section with Form -->
+        <div class="login-right">
+            <div class="login-box">
+                <h2>CREATE YOUR OWN ACCOUNT</h2>
+                <p class="welcome-text">Welcome to LIBMATCH</p>
+
+                <!-- Simplified form to only require email and password -->
+                <form id="registerForm" class="form">
+                    <div class="form-group">
+                        <input type="email" id="email" name="email" placeholder="Your Email" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="password" name="password" placeholder="Your Password" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required>
+                    </div>
+                    <button type="submit" class="login-btn">SIGN UP</button>
+                </form>
+
+                <div class="divider">
+                    <hr><span>or sign up with</span><hr>
+                </div>
+
+                <!-- Social Login Options -->
+                <div class="social-buttons">
+                <!-- Google -->
+                    <button type="button" class="social-btn google-btn" onclick="alert('Google signup akan diintegrasikan')">
+                        <svg width="24" height="24" viewBox="0 0 48 48">
+                            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.61l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.57 13.05 17.73 9.5 24 9.5z"/>
+                            <path fill="#4285F4" d="M46.14 24.55c0-1.57-.15-3.09-.44-4.55H24v9.07h12.31c-.53 2.87-2.1 5.29-4.46 6.91l7.03 5.48C43.63 37.53 46.14 31.51 46.14 24.55z"/>
+                            <path fill="#FBBC05" d="M10.54 28.59c-.49-1.45-.77-2.98-.77-4.59s.28-3.14.77-4.59L2.56 13.22C.87 16.64 0 20.32 0 24c0 3.68.87 7.36 2.56 10.78l7.98-6.19z"/>
+                            <path fill="#34A853" d="M24 48c6.48 0 11.95-2.13 15.94-5.79l-7.03-5.48c-2.02 1.35-4.61 2.11-8.91 2.11-6.27 0-11.43-3.55-13.46-8.5L2.56 34.78C6.51 42.62 14.62 48 24 48z"/>
+                        </svg>
+                    </button>
+
+                <!-- Facebook -->
+                     <button type="button" class="social-btn facebook-btn" onclick="alert('Facebook signup akan diintegrasikan')">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                        </svg>
+                    </button>
+
+                <!-- X / Twitter -->
+                    <button type="button" class="social-btn twitter-btn" onclick="alert('Twitter signup akan diintegrasikan')">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18.244 2H21.5l-7.42 8.49L23 22h-7.387l-5.087-6.643L4.5 22H1.243l7.93-9.07L1 2h7.47l4.713 6.231L18.244 2zm-2.62 18h1.36L8.718 4H7.27l8.355 16z"/>
+                        </svg>              
+                    </button>
+                </div>
+                <p class="signup-text">
+                    Already have an account? <a href="/FrontEnd/login.html">Login</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="/FrontEnd/js/auth.js"></script>
+</body>
+</html>
