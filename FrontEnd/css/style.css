@@ -1,22 +1,54 @@
 /* reset */
-@import url('https://fonts.googleapis.com/css2?family=Kadwa:wght@400;700&display=swap');
-
 * {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: "Poppins", sans-serif;
+  margin:0; 
+  padding:0; 
+  box-sizing:border-box;
+}  
+body {
+  font-family:Arial, sans-serif; 
+  background:#f5f5f5; 
+  color:#222;
+}
+a {
+  text-decoration:none; 
+  color:inherit;
 }
 
 /* ==== HEADER ==== */
 .site-header {
-  background: #fff;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
-  position: sticky;
-  top: 0;
-  z-index: 1000;
+  width:100%; 
+  background:#fff; 
+  border-bottom:1px solid #ddd;
 }
-
+.header-top {
+  margin-top: 10px; 
+  display:flex; 
+  justify-content:space-between; 
+  align-items:center; 
+  padding:15px 20px;
+}
+.logo {
+  font-size:1.8rem; 
+  font-weight:700;
+}
+.right-actions {
+  display:flex; 
+  align-items:center; 
+  gap:1.5rem;
+}
+.search-wrap input {
+  padding:10px 14px; 
+  border:1px solid #ccc; 
+  border-radius:6px; 
+  width:220px;
+}
+.login-btn {
+  background:#007bff; 
+  color:#fff; 
+  padding:10px 16px; 
+  border-radius:6px; 
+  font-size:14px;
+}
 /* baris logo & login */
 .header-top {
   display: flex;
@@ -100,7 +132,7 @@
 .dashboard-bar .search-wrap input {
   margin-top: 30px;      
   padding: 12px;
-  width: 550px;
+  width: 1000px;
   border-radius: 10px;
   border: 1px solid #ddd;
   outline: none;
@@ -108,7 +140,7 @@
   transition: 0.2s;
 }
 
-search-wrap.header-search {
+.search-wrap.header-search {
   flex-grow: 1;
   max-width: 650px;
   margin: 0 20px;
@@ -127,22 +159,17 @@ search-wrap.header-search {
 
 /* menu */
 .main-nav {
-  margin-top: 0; 
-  display: flex;
-  padding: 15px 0;
-  flex-wrap: wrap;
-  gap: 18px;
+  display:flex; 
   justify-content: center;
+  gap:10px; 
+  padding:12px 0; 
+  background:#fff; 
 }
-
 .main-nav a {
-  color: #a7a7a7;
-  text-decoration: none;
-  font-weight: 600;
-  transition: color 0.2s;
-}
-.main-nav a:hover {
-  color: #000;
+  font-size: 15px;
+  color: #333;
+  font-weight: 500;
+  padding: 6px 10px;
 }
 .main-nav a.active {
   color: #163ab6;
@@ -216,40 +243,39 @@ main {
 .book-slider::-webkit-scrollbar {
   height: none;
 }
-.book-slider::-webkit-scrollbar-thumb {
-  background: #d0d0d0;
-  border-radius: none;
-}
 
-/* each card fixed width so horizontal scrolling works reliably */
+/* ====== BOOK CARDS ====== */
+.book-row {
+  display:flex; 
+  overflow-x:auto; 
+  gap:14px; 
+  padding-bottom:10px;
+}
 .book-card {
-  flex: 0 0 170px;
-  scroll-snap-align: start;
-  background: #fff;
-  border-radius: 10px;
-  padding: 8px;
-  text-align: center;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  flex:0 0 180px; 
+  background:#fff; 
+  border-radius:8px; 
+  padding:10px; 
+  border:1px solid #eee;
 }
-
-/* enforce identical image size for all categories */
 .book-card img {
-  width: 100%;
-  height: 250px;
-  object-fit: cover;
-  border-radius: 8px;
-  display: block;
+  width:100%; 
+  height:270px; 
+  object-fit:cover; 
+  border-radius:6px;
 }
 
 /* titles / subtitle */
 .title {
-  margin-top: 10px;
-  font-size: 12px;
+  margin-top: 3px;
+  font-size: 14px;
   color: #333;
   font-weight: 600;
 }
 .sub {
-  font-size: 10px;
+  margin-top: 1px;
+  font-size: 12px;
+  margin-bottom: 1px;
   color: #888;
 }
 
@@ -269,37 +295,33 @@ main {
 /* ===== CATEGORY HEADER (judul + tombol explore) ===== */
 .category {
   margin-top: 50px;
-  width: 85%;
+  width: 100%;
   max-width: 1100px;
   margin-left: auto;
   margin-right: auto;
 }
 
 .category-header {
-  display: flex;
-  align-items: baseline;
-  margin-bottom: 14px;
-  padding: 0 2px;
+  display:flex; 
+  justify-content:space-between; 
+  align-items:center; 
+  margin-bottom:15px;
 }
-
 .category-header h2 {
-  font-size: 22px;
-  font-weight: 700;
-  color: #222;
-  margin: 0;
+  font-size:20px; 
+  font-weight:600;
 }
 
-.explore-btn {
-  font-size: 14px;
-  color: #c7a27c;
-  text-decoration: none;
-  font-weight: 600;
-  transition: all 0.2s;
-  margin-left: 15px;
-}
+  .explore-btn {
+    font-size: 14px;
+    color: #555;
+    font-weight: 500;
+    text-decoration: none;
+    padding: 4px 8px;
+  }
 
 .explore-btn:hover {
-  color: #000;
+  color: #111;
   text-decoration: underline;
 }
 
@@ -527,7 +549,7 @@ body {
 
 .auth-header p {
   color: #666;
-  font-size: 0,5rem;
+  font-size: 05rem;
 }
 
 /* === Form Group === */
@@ -703,26 +725,49 @@ body {
     gap: 1rem;
   }
 
-  .login-btn {
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
+  .search-wrap.header-search input {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .main-nav {
+    gap: 10px;
   }
 
   .book-card {
     flex: 0 0 120px;
   }
 
+  .book-card img {
+    height: 150px;
+  }
+
+  .category {
+    width: 90%;
+  }
+
   .category-header h2 {
-    font-size: 1.3rem;
+    font-size: 18px;
   }
 
-  .best-box h2 {
-    font-size: 1.5rem;
+  .login-left {
+    padding: 40px 20px;
   }
 
-  .login-box,
-  .auth-card {
-    padding: 1.5rem;
+  .brand {
+    font-size: 36px;
+  }
+
+  .login-illustration {
+    width: 75%;
+  }
+
+  .login-box h1 {
+    font-size: 36px;
+  }
+
+  .login-box h2 {
+    font-size: 26px;
   }
 }
 
@@ -777,7 +822,6 @@ body {
   max-width: 1100px;
   margin: 0 auto;
   padding: 40px 20px;
-  min-height: calc(100vh - 300px);
 }
 
 .profile-container {
@@ -1015,42 +1059,39 @@ body {
   display: block;
 }
 
-/* KATEGORI GRID */
+/* KATEGORI SECTION */
 .kategori-section {
-    max-width: 1100px;
-    margin: 30px auto;
-    padding: 0 20px;
+  max-width:1100px; 
+  margin:30px auto; 
+  padding:0 100px;
 }
-
 .kategori-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 16px;
-    margin-top: 20px;
+  display:grid; 
+  grid-template-columns:repeat(auto-fill, minmax(120px,1fr)); 
+  gap:16px;
 }
-
 .kategori-card {
-    background: #fff;
-    border-radius: 10px;
-    padding: 100px;
-    text-align: center;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
+  background:#fff; 
+  border-radius:10px; 
+  padding:70px; 
+  display:flex; 
+  justify-content:center; 
+  align-items:center; 
+  font-weight:bold; 
+  cursor:pointer; 
+  border:1px solid #eee;
 }
-
 .kategori-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-}
+  background:#f0f7ff; 
+  border-color:#a7d0ff;}
 
 .kategori-icon {
-    font-size: 100px;
+    font-size: 40px;
     margin-bottom: 10px;
 }
 
 .kategori-title {
-    font-size: 14px;
+    font-size: 12px;
     font-weight: 600;
     color: #333;
 }

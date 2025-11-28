@@ -5,13 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - LibMatch</title>
     <link rel="stylesheet" href="/FrontEnd/css/style.css">
+    <style>
+        main[data-feature]:not([data-feature="home"]) {
+            display: none;
+        }
+    </style>
 </head>
 <body>
     <!-- HEADER -->
     <header class="site-header">
         <div class="header-top">
             <div class="logo">LibMatch</div>
-        
             <div class="search-wrap header-search">
                 <input type="text" placeholder="Search by author, title, or name..." />
             </div>
@@ -29,9 +33,6 @@
             <a href="#" data-nav-link="kategori">Category</a>
             <a href="#" data-nav-link="find-store">Borrower</a>
             <a href="/FrontEnd/your-books.html">My Book</a>
-            <a href="/FrontEnd/book-management.html" class="nav-admin-link">📚 Kelola Buku</a>
-            <a href="/FrontEnd/borrow-management.html" class="nav-admin-link">📋 Kelola Peminjaman</a>
-            <a href="/FrontEnd/admin-dashboard.html" class="nav-admin-link">⚙️ Admin</a>
         </nav>
     </header>
 
@@ -90,7 +91,6 @@
                 </div>
             </div>
         </section>
-
         <section class="book-section">
             <div class="category-header">
                 <h2>New Arrivals</h2>

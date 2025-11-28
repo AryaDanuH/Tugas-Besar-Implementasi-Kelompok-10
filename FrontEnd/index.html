@@ -11,26 +11,21 @@
     <header class="site-header">
         <div class="header-top">
             <div class="logo"> LibMatch</div>
+            <div class="search-wrap header-search">
+                <input type="text" placeholder="Search by author, title, or name..." />
+            </div>
             <div class="right-actions">
                 <button class="login-btn" onclick="window.location.href='/FrontEnd/login.html'">Login</button>
                 <span class="lang-text">EN</span>
             </div>
         </div>
-
-        <!-- STICKY DASHBOARD -->
-        <div class="dashboard-bar">
-            <div class="search-wrap">
-                <input type="text" placeholder="Cari berdasarkan penulis, judul, atau nama..." />
-            </div>
-
-            <nav class="main-nav">
-                <a href="#" data-nav-link="home" class="active">Home</a>
-                <a href="#" data-nav-link="bestseller">Bestseller</a>
-                <a href="#" data-nav-link="kategori">Category</a>
-                <a href="#" data-nav-link="find-store">Find a store</a>
-                <a href="#">Your Books</a>
-            </nav>
-        </div>
+            <nav class="main-nav header-nav">
+            <a href="#" data-nav-link="home" class="active">Home</a>
+            <a href="#" data-nav-link="bestseller">Bestseller</a>
+            <a href="#" data-nav-link="kategori">Category</a>
+            <a href="#" data-nav-link="find-store">Borrower</a>
+            <a href="/FrontEnd/your-books.html">My Book</a>
+        </nav>
     </header>
 
     <!-- HOME FEATURE -->
@@ -38,17 +33,17 @@
         <!-- BEST SELLER SECTION -->
         <section class="best-seller">
             <div class="best-box">
-                <h2>Buku Terlaris</h2>
-                <p>Temukan buku-buku yang sedang trending hari ini</p>
-                <button class="enter-btn" onclick="showFeature('bestseller')">Jelajahi Sekarang</button>
+                <h2>Popular Book</h2>
+                <p>Find today's trending books</p>
+                <button class="enter-btn" onclick="showFeature('bestseller')">Check it now</button>
             </div>
         </section>
 
         <!-- BOOK CATEGORIES -->
         <section class="book-section">
             <div class="category-header">
-                <h3>Populer Sekarang</h3>
-                <a href="#" onclick="showFeature('bestseller'); return false;" class="explore-btn">Lihat Semua →</a>
+                <h2>Popular now</h2>
+                <a href="#" onclick="showFeature('bestseller'); return false;" class="explore-btn">Explore All ></a>
             </div>
             <div class="book-slider">
                 <div class="book-card">
@@ -76,13 +71,23 @@
                     <p class="title">Jane Eyre</p>
                     <p class="sub">Charlotte Brontë</p>
                 </div>
+                <div class="book-card">
+                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
+                    <p class="title">Jane Eyre</p>
+                    <p class="sub">Charlotte Brontë</p>
+                </div>
+                <div class="book-card">
+                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
+                    <p class="title">Jane Eyre</p>
+                    <p class="sub">Charlotte Brontë</p>
+                </div>
             </div>
         </section>
 
         <section class="book-section">
             <div class="category-header">
-                <h3>Kedatangan Baru</h3>
-                <a href="#" onclick="showFeature('bestseller'); return false;" class="explore-btn">Lihat Semua →</a>
+                <h2>New Arrivals</h2>
+                <a href="#" onclick="showFeature('bestseller'); return false;" class="explore-btn">Explore All ></a>
             </div>
             <div class="book-slider">
                 <div class="book-card">
@@ -110,13 +115,23 @@
                     <p class="title">Thinking, Fast and Slow</p>
                     <p class="sub">Daniel Kahneman</p>
                 </div>
+                <div class="book-card">
+                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
+                    <p class="title">Jane Eyre</p>
+                    <p class="sub">Charlotte Brontë</p>
+                </div>
+                <div class="book-card">
+                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
+                    <p class="title">Jane Eyre</p>
+                    <p class="sub">Charlotte Brontë</p>
+                </div>
             </div>
         </section>
 
         <section class="book-section">
             <div class="category-header">
-                <h3>Paling Banyak Dipinjam</h3>
-                <a href="#" onclick="showFeature('bestseller'); return false;" class="explore-btn">Lihat Semua →</a>
+                <h2>Top Borrowed</h2>
+                <a href="#" onclick="showFeature('bestseller'); return false;" class="explore-btn">Explore All ></a>
             </div>
             <div class="book-slider">
                 <div class="book-card">
@@ -144,15 +159,114 @@
                     <p class="title">The Name of the Wind</p>
                     <p class="sub">Patrick Rothfuss</p>
                 </div>
+                <div class="book-card">
+                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
+                    <p class="title">Jane Eyre</p>
+                    <p class="sub">Charlotte Brontë</p>
+                </div>
+                <div class="book-card">
+                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
+                    <p class="title">Jane Eyre</p>
+                    <p class="sub">Charlotte Brontë</p>
+                </div>
             </div>
         </section>
+
+        <section class="book-section">
+            <div class="category-header">
+                <h2>Tranding Genres</h2>
+                <a href="#" onclick="showFeature('bestseller'); return false;" class="explore-btn">Explore All ></a>
+            </div>
+            <div class="book-slider">
+                <div class="book-card">
+                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
+                    <p class="title">The Hobbit</p>
+                    <p class="sub">J.R.R. Tolkien</p>
+                </div>
+                <div class="book-card">
+                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
+                    <p class="title">Harry Potter</p>
+                    <p class="sub">J.K. Rowling</p>
+                </div>
+                <div class="book-card">
+                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
+                    <p class="title">The Lord of the Rings</p>
+                    <p class="sub">J.R.R. Tolkien</p>
+                </div>
+                <div class="book-card">
+                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
+                    <p class="title">Dune</p>
+                    <p class="sub">Frank Herbert</p>
+                </div>
+                <div class="book-card">
+                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
+                    <p class="title">The Name of the Wind</p>
+                    <p class="sub">Patrick Rothfuss</p>
+                </div>
+                <div class="book-card">
+                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
+                    <p class="title">Jane Eyre</p>
+                    <p class="sub">Charlotte Brontë</p>
+                </div>
+                <div class="book-card">
+                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
+                    <p class="title">Jane Eyre</p>
+                    <p class="sub">Charlotte Brontë</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="book-section">
+            <div class="category-header">
+                <h2>Staff Picks</h2>
+                <a href="#" onclick="showFeature('bestseller'); return false;" class="explore-btn">Explore All ></a>
+            </div>
+            <div class="book-slider">
+                <div class="book-card">
+                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
+                    <p class="title">The Hobbit</p>
+                    <p class="sub">J.R.R. Tolkien</p>
+                </div>
+                <div class="book-card">
+                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
+                    <p class="title">Harry Potter</p>
+                    <p class="sub">J.K. Rowling</p>
+                </div>
+                <div class="book-card">
+                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
+                    <p class="title">The Lord of the Rings</p>
+                    <p class="sub">J.R.R. Tolkien</p>
+                </div>
+                <div class="book-card">
+                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
+                    <p class="title">Dune</p>
+                    <p class="sub">Frank Herbert</p>
+                </div>
+                <div class="book-card">
+                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
+                    <p class="title">The Name of the Wind</p>
+                    <p class="sub">Patrick Rothfuss</p>
+                </div>
+                <div class="book-card">
+                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
+                    <p class="title">Jane Eyre</p>
+                    <p class="sub">Charlotte Brontë</p>
+                </div>
+                <div class="book-card">
+                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
+                    <p class="title">Jane Eyre</p>
+                    <p class="sub">Charlotte Brontë</p>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <!-- BESTSELLER FEATURE -->
     <main data-feature="bestseller" style="display: none;">
         <section class="bestseller-section">
             <div class="category-header">
-                <h3>Buku Terlaris</h3>
+                <h3>Popular BOOK</h3>
             </div>
             <div class="bestseller-grid">
                 <div class="book-card-large">
@@ -214,6 +328,16 @@
                     <img src="/FrontEnd/images/book-cover.png" alt="Book">
                     <p class="title">Atomic Habits</p>
                     <p class="sub">James Clear</p>
+                </div>
+                <div class="book-card">
+                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
+                    <p class="title">Jane Eyre</p>
+                    <p class="sub">Charlotte Brontë</p>
+                </div>
+                <div class="book-card">
+                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
+                    <p class="title">Jane Eyre</p>
+                    <p class="sub">Charlotte Brontë</p>
                 </div>
             </div>
         </section>
@@ -278,6 +402,17 @@
         </section>
     </main>
 
+    <footer class="site-footer">
+        <nav class="footer-nav">
+            <a href="/FrontEnd/about.html">About</a> | 
+            <a href="/FrontEnd/help.html">Help</a> | 
+            <a href="/FrontEnd/terms.html">Terms</a> | 
+            <a href="/FrontEnd/privacy.html">Privacy</a> |
+            <a href="/FrontEnd/contact.html">Contact</a> 
+        </nav>
+        <p>&copy; 2025 LibMatch. Semua hak dilindungi.</p>
+    </footer>
+
     <!-- FIND STORE FEATURE -->
     <main data-feature="find-store" style="display: none;">
         <section class="find-store-section">
@@ -312,10 +447,6 @@
             </div>
         </section>
     </main>
-
-    <footer class="site-footer">
-        <p>&copy; 2025 LibMatch. Semua hak dilindungi.</p>
-    </footer>
 
     <script src="/FrontEnd/js/features.js"></script>
 </body>
