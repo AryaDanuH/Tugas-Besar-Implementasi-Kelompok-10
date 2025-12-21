@@ -1,6 +1,6 @@
-const API_URL = window.location.origin + "/api"
 let allBooks = []
 let selectedBook = null
+const API_URL = "http://localhost:8080"
 
 function checkAuth() {
   // Placeholder for authentication check logic
@@ -8,14 +8,17 @@ function checkAuth() {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
-  checkAuth()
-  await loadBooks()
-  await loadCategories()
+  // Only run on pages that have these containers (not on category-books.html)
+  if (document.getElementById("booksContainer") || document.getElementById("categoryFilter")) {
+    checkAuth()
+    await loadBooks()
+    await loadCategories()
+  }
 })
 
 async function loadBooks() {
   try {
-    const response = await fetch(`${API_URL}/books`)
+    const response = await fetch(`${API_URL}/api/books`)
     allBooks = await response.json()
     displayBooks(allBooks)
   } catch (error) {
@@ -25,7 +28,7 @@ async function loadBooks() {
 
 async function loadCategories() {
   try {
-    const response = await fetch(`${API_URL}/books`)
+    const response = await fetch(`${API_URL}/api/books`)
     const books = await response.json()
     const categories = [...new Set(books.map((b) => ({ id: b.category_id, name: b.category_name })))]
 
@@ -97,7 +100,7 @@ function borrowBook() {
   const bookLocationId = 1 // Default for demo
   const deliveryType = "offline"
 
-  fetch(`${API_URL}/borrows`, {
+  fetch(`${API_URL}/api/borrows`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({

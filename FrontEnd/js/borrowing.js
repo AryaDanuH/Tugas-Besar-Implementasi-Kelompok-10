@@ -1,4 +1,3 @@
-const API_URL = window.location.origin + "/api"
 let allTransactions = []
 
 function checkAuth() {
@@ -13,7 +12,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 async function loadTransactions(userId) {
   try {
-    const response = await fetch(`${API_URL}/borrows/user/${userId}`)
+    const response = await fetch(`/api/borrows/user/${userId}`)
     allTransactions = await response.json()
     displayTransactions(allTransactions)
   } catch (error) {
@@ -61,7 +60,7 @@ function filterTransactions(status) {
 }
 
 function returnTransaction(transactionId) {
-  fetch(`${API_URL}/borrows/${transactionId}/return`, {
+  fetch(`/api/borrows/${transactionId}/return`, {
     method: "PUT",
   })
     .then((response) => {

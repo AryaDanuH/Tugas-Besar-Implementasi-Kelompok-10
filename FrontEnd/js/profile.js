@@ -1,5 +1,3 @@
-const API_URL = window.location.origin + "/api"
-
 // Function to get current user from localStorage
 function getCurrentUser() {
   const userString = localStorage.getItem("user")
@@ -37,15 +35,16 @@ document.addEventListener("DOMContentLoaded", () => {
     return
   }
 
-  // Display user data from localStorage
   document.getElementById("name").value = user.name || ""
   document.getElementById("email").value = user.email || ""
   document.getElementById("phone").value = user.phone || ""
   document.getElementById("address").value = user.address || ""
-  document.getElementById("role").value = user.role || "user"
-  document.getElementById("userName").textContent = user.name || user.email
+  document.getElementById("city").value = user.city || ""
+  document.getElementById("province").value = user.province || ""
+  document.getElementById("postal_code").value = user.postal_code || ""
 
   if (user.profile_image) {
+    document.getElementById("userAvatar").src = user.profile_image
     document.getElementById("profileImagePreview").src = user.profile_image
   }
 
@@ -58,6 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const reader = new FileReader()
     reader.onload = (event) => {
       document.getElementById("profileImagePreview").src = event.target.result
+      document.getElementById("userAvatar").src = event.target.result
     }
     reader.readAsDataURL(file)
 
@@ -66,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
     formData.append("file", file)
 
     try {
-      const response = await fetch(`${API_URL}/users/${user.user_id}/upload-profile-image`, {
+      const response = await fetch(`/api/users/${user.user_id}/upload-profile-image`, {
         method: "POST",
         body: formData,
       })
@@ -77,13 +77,13 @@ document.addEventListener("DOMContentLoaded", () => {
         // Update user data in localStorage
         const updatedUser = { ...user, profile_image: data.profile_image }
         localStorage.setItem("user", JSON.stringify(updatedUser))
-        showNotification("Foto profil berhasil diperbarui!", "success")
+        showNotification("Profile photo updated successfully!", "success")
       } else {
-        showNotification("Gagal mengunggah foto profil", "error")
+        showNotification("Failed to upload profile photo", "error")
       }
     } catch (error) {
       console.error("Error uploading profile image:", error)
-      showNotification("Terjadi kesalahan: " + error.message, "error")
+      showNotification("An error occurred: " + error.message, "error")
     }
   })
 })
@@ -96,24 +96,31 @@ document.getElementById("profileForm").addEventListener("submit", async (e) => {
     name: document.getElementById("name").value,
     phone: document.getElementById("phone").value,
     address: document.getElementById("address").value,
+    city: document.getElementById("city").value,
+    province: document.getElementById("province").value,
+    postal_code: document.getElementById("postal_code").value,
   }
 
   try {
-    const response = await fetch(`${API_URL}/users/${user.user_id}`, {
+    const response = await fetch(`/api/users/${user.user_id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(updatedUser),
     })
 
+    const data = await response.json()
+
     if (response.ok) {
+      // Update localStorage with new data
       const updatedUserData = { ...user, ...updatedUser }
       localStorage.setItem("user", JSON.stringify(updatedUserData))
-      showNotification("Profil berhasil diperbarui!", "success")
+
+      showNotification("Profile updated successfully!", "success")
     } else {
-      showNotification("Gagal memperbarui profil", "error")
+      showNotification(data.message || "Failed to update profile", "error")
     }
   } catch (error) {
     console.error("Error updating profile:", error)
-    showNotification("Terjadi kesalahan: " + error.message, "error")
+    showNotification("An error occurred: " + error.message, "error")
   }
 })

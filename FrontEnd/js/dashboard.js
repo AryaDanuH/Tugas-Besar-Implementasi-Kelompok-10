@@ -1,17 +1,23 @@
-// Import the checkAuth function
-function checkAuth() {
-  // Placeholder for actual authentication check logic
-  return { name: "John Doe", user_id: 123 }
-}
-
-const API_URL = window.location.origin + "/api"
-
 document.addEventListener("DOMContentLoaded", async () => {
+  const checkAuth = () => {
+    // Assuming checkAuth function is defined here for the sake of completeness
+    // In a real scenario, this function should be imported or defined elsewhere
+    const user = JSON.parse(localStorage.getItem("user"))
+    return user
+  }
+
   const user = checkAuth()
-  document.getElementById("userName").textContent = user.name
+  if (!user || !user.name) {
+    return
+  }
+
+  const userNameElement = document.getElementById("userName")
+  if (userNameElement) {
+    userNameElement.textContent = user.name
+  }
 
   try {
-    const borrowResponse = await fetch(`${API_URL}/borrows/user/${user.user_id}`)
+    const borrowResponse = await fetch(`${window.location.origin}/api/borrows/user/${user.user_id}`)
     const borrows = await borrowResponse.json()
 
     // Calculate stats
@@ -19,29 +25,38 @@ document.addEventListener("DOMContentLoaded", async () => {
     const returned = borrows.filter((t) => t.status === "returned").length
     const total = borrows.length
 
-    document.getElementById("borrowedCount").textContent = borrowed
-    document.getElementById("returnedCount").textContent = returned
-    document.getElementById("totalCount").textContent = total
+    const borrowedCountElement = document.getElementById("borrowedCount")
+    const returnedCountElement = document.getElementById("returnedCount")
+    const totalCountElement = document.getElementById("totalCount")
+
+    if (borrowedCountElement) borrowedCountElement.textContent = borrowed
+    if (returnedCountElement) returnedCountElement.textContent = returned
+    if (totalCountElement) totalCountElement.textContent = total
 
     // Get locations count
-    const locResponse = await fetch(`${API_URL}/locations`)
+    const locResponse = await fetch(`${window.location.origin}/api/locations`)
     const locations = await locResponse.json()
-    document.getElementById("locationCount").textContent = locations.length
+    const locationCountElement = document.getElementById("locationCount")
+    if (locationCountElement) {
+      locationCountElement.textContent = locations.length
+    }
 
     // Display recent transactions
     const tbody = document.getElementById("recentTransactions")
-    tbody.innerHTML = ""
-    borrows.slice(0, 5).forEach((trans) => {
-      const row = document.createElement("tr")
-      row.innerHTML = `
+    if (tbody) {
+      tbody.innerHTML = ""
+      borrows.slice(0, 5).forEach((trans) => {
+        const row = document.createElement("tr")
+        row.innerHTML = `
                 <td>${trans.transaction_id}</td>
                 <td>${new Date(trans.borrow_date).toLocaleDateString("id-ID")}</td>
                 <td>${trans.return_date ? new Date(trans.return_date).toLocaleDateString("id-ID") : "-"}</td>
                 <td><span class="status-badge status-${trans.status}">${trans.status}</span></td>
                 <td>${trans.delivery_type}</td>
             `
-      tbody.appendChild(row)
-    })
+        tbody.appendChild(row)
+      })
+    }
   } catch (error) {
     console.error("Error loading dashboard:", error)
   }
