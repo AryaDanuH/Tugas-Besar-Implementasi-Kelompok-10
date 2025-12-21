@@ -1,5 +1,12 @@
 package main
 
+import (
+	"database/sql"
+	"fmt"
+)
+
+var db *sql.DB
+
 type Book struct {
 	BookID        int    `json:"book_id"`
 	Title         string `json:"title"`
@@ -9,6 +16,14 @@ type Book struct {
 	ISBN          string `json:"isbn"`
 	CategoryID    int    `json:"category_id"`
 	CategoryName  string `json:"category_name"`
+	CoverImage    string `json:"cover_image"`
+	Location      string `json:"location"`
+	Status        string `json:"status"`
+	Description   string `json:"description"`
+	UploadedBy    int    `json:"uploaded_by"`
+	UploaderName  string `json:"uploader_name"`
+	UploaderEmail string `json:"uploader_email"`
+	UploaderPhone string `json:"uploader_phone"`
 }
 
 type Category struct {
@@ -32,7 +47,9 @@ type BookLocation struct {
 // GetAllBooks mengambil semua buku
 func GetAllBooks() ([]Book, error) {
 	rows, err := db.Query(`
-		SELECT b.book_id, b.title, b.author, b.publisher, b.year_published, b.isbn, b.category_id, c.category_name
+		SELECT b.book_id, b.title, b.author, b.publisher, b.year_published, b.isbn, b.category_id, c.category_name, 
+		       COALESCE(b.cover_image, ''), COALESCE(b.location, ''), COALESCE(b.status, 'pending'), COALESCE(b.description, ''),
+		       COALESCE(b.uploaded_by, 0), COALESCE(b.uploader_name, ''), COALESCE(b.uploader_email, ''), COALESCE(b.uploader_phone, '')
 		FROM book b
 		LEFT JOIN category c ON b.category_id = c.category_id
 	`)
@@ -44,7 +61,8 @@ func GetAllBooks() ([]Book, error) {
 	var books []Book
 	for rows.Next() {
 		var book Book
-		err := rows.Scan(&book.BookID, &book.Title, &book.Author, &book.Publisher, &book.YearPublished, &book.ISBN, &book.CategoryID, &book.CategoryName)
+		err := rows.Scan(&book.BookID, &book.Title, &book.Author, &book.Publisher, &book.YearPublished, &book.ISBN, &book.CategoryID, &book.CategoryName,
+			&book.CoverImage, &book.Location, &book.Status, &book.Description, &book.UploadedBy, &book.UploaderName, &book.UploaderEmail, &book.UploaderPhone)
 		if err != nil {
 			return nil, err
 		}
@@ -57,11 +75,14 @@ func GetAllBooks() ([]Book, error) {
 func GetBookByID(id int) (*Book, error) {
 	book := &Book{}
 	err := db.QueryRow(`
-		SELECT b.book_id, b.title, b.author, b.publisher, b.year_published, b.isbn, b.category_id, c.category_name
+		SELECT b.book_id, b.title, b.author, b.publisher, b.year_published, b.isbn, b.category_id, c.category_name,
+		       COALESCE(b.cover_image, ''), COALESCE(b.location, ''), COALESCE(b.status, 'pending'), COALESCE(b.description, ''),
+		       COALESCE(b.uploaded_by, 0), COALESCE(b.uploader_name, ''), COALESCE(b.uploader_email, ''), COALESCE(b.uploader_phone, '')
 		FROM book b
 		LEFT JOIN category c ON b.category_id = c.category_id
 		WHERE b.book_id = ?
-	`, id).Scan(&book.BookID, &book.Title, &book.Author, &book.Publisher, &book.YearPublished, &book.ISBN, &book.CategoryID, &book.CategoryName)
+	`, id).Scan(&book.BookID, &book.Title, &book.Author, &book.Publisher, &book.YearPublished, &book.ISBN, &book.CategoryID, &book.CategoryName,
+		&book.CoverImage, &book.Location, &book.Status, &book.Description, &book.UploadedBy, &book.UploaderName, &book.UploaderEmail, &book.UploaderPhone)
 	if err != nil {
 		return nil, err
 	}
@@ -71,7 +92,9 @@ func GetBookByID(id int) (*Book, error) {
 // GetBooksByCategory mengambil buku berdasarkan kategori
 func GetBooksByCategory(categoryID int) ([]Book, error) {
 	rows, err := db.Query(`
-		SELECT b.book_id, b.title, b.author, b.publisher, b.year_published, b.isbn, b.category_id, c.category_name
+		SELECT b.book_id, b.title, b.author, b.publisher, b.year_published, b.isbn, b.category_id, c.category_name,
+		       COALESCE(b.cover_image, ''), COALESCE(b.location, ''), COALESCE(b.status, 'pending'), COALESCE(b.description, ''),
+		       COALESCE(b.uploaded_by, 0), COALESCE(b.uploader_name, ''), COALESCE(b.uploader_email, ''), COALESCE(b.uploader_phone, '')
 		FROM book b
 		LEFT JOIN category c ON b.category_id = c.category_id
 		WHERE b.category_id = ?
@@ -84,7 +107,8 @@ func GetBooksByCategory(categoryID int) ([]Book, error) {
 	var books []Book
 	for rows.Next() {
 		var book Book
-		err := rows.Scan(&book.BookID, &book.Title, &book.Author, &book.Publisher, &book.YearPublished, &book.ISBN, &book.CategoryID, &book.CategoryName)
+		err := rows.Scan(&book.BookID, &book.Title, &book.Author, &book.Publisher, &book.YearPublished, &book.ISBN, &book.CategoryID, &book.CategoryName,
+			&book.CoverImage, &book.Location, &book.Status, &book.Description, &book.UploadedBy, &book.UploaderName, &book.UploaderEmail, &book.UploaderPhone)
 		if err != nil {
 			return nil, err
 		}
@@ -96,7 +120,9 @@ func GetBooksByCategory(categoryID int) ([]Book, error) {
 // SearchBooks mencari buku berdasarkan judul atau author
 func SearchBooks(query string) ([]Book, error) {
 	rows, err := db.Query(`
-		SELECT b.book_id, b.title, b.author, b.publisher, b.year_published, b.isbn, b.category_id, c.category_name
+		SELECT b.book_id, b.title, b.author, b.publisher, b.year_published, b.isbn, b.category_id, c.category_name,
+		       COALESCE(b.cover_image, ''), COALESCE(b.location, ''), COALESCE(b.status, 'pending'), COALESCE(b.description, ''),
+		       COALESCE(b.uploaded_by, 0), COALESCE(b.uploader_name, ''), COALESCE(b.uploader_email, ''), COALESCE(b.uploader_phone, '')
 		FROM book b
 		LEFT JOIN category c ON b.category_id = c.category_id
 		WHERE b.title LIKE ? OR b.author LIKE ?
@@ -109,7 +135,8 @@ func SearchBooks(query string) ([]Book, error) {
 	var books []Book
 	for rows.Next() {
 		var book Book
-		err := rows.Scan(&book.BookID, &book.Title, &book.Author, &book.Publisher, &book.YearPublished, &book.ISBN, &book.CategoryID, &book.CategoryName)
+		err := rows.Scan(&book.BookID, &book.Title, &book.Author, &book.Publisher, &book.YearPublished, &book.ISBN, &book.CategoryID, &book.CategoryName,
+			&book.CoverImage, &book.Location, &book.Status, &book.Description, &book.UploadedBy, &book.UploaderName, &book.UploaderEmail, &book.UploaderPhone)
 		if err != nil {
 			return nil, err
 		}
@@ -121,7 +148,9 @@ func SearchBooks(query string) ([]Book, error) {
 // GetPopularBooks mengambil buku populer berdasarkan jumlah peminjaman
 func GetPopularBooks(limit int) ([]Book, error) {
 	rows, err := db.Query(`
-		SELECT b.book_id, b.title, b.author, b.publisher, b.year_published, b.isbn, b.category_id, c.category_name
+		SELECT b.book_id, b.title, b.author, b.publisher, b.year_published, b.isbn, b.category_id, c.category_name,
+		       COALESCE(b.cover_image, ''), COALESCE(b.location, ''), COALESCE(b.status, 'pending'), COALESCE(b.description, ''),
+		       COALESCE(b.uploaded_by, 0), COALESCE(b.uploader_name, ''), COALESCE(b.uploader_email, ''), COALESCE(b.uploader_phone, '')
 		FROM book b
 		LEFT JOIN category c ON b.category_id = c.category_id
 		LEFT JOIN borrow br ON b.book_id = br.book_id
@@ -137,7 +166,8 @@ func GetPopularBooks(limit int) ([]Book, error) {
 	var books []Book
 	for rows.Next() {
 		var book Book
-		err := rows.Scan(&book.BookID, &book.Title, &book.Author, &book.Publisher, &book.YearPublished, &book.ISBN, &book.CategoryID, &book.CategoryName)
+		err := rows.Scan(&book.BookID, &book.Title, &book.Author, &book.Publisher, &book.YearPublished, &book.ISBN, &book.CategoryID, &book.CategoryName,
+			&book.CoverImage, &book.Location, &book.Status, &book.Description, &book.UploadedBy, &book.UploaderName, &book.UploaderEmail, &book.UploaderPhone)
 		if err != nil {
 			return nil, err
 		}
@@ -146,12 +176,12 @@ func GetPopularBooks(limit int) ([]Book, error) {
 	return books, nil
 }
 
-// AddBook menambahkan buku baru
-func AddBook(title, author, publisher string, yearPublished int, isbn string, categoryID int) (int, error) {
+// AddBook menambahkan buku baru (for admin use only, use uploadBook handler for user uploads)
+func AddBook(title, author, publisher, isbn string, yearPublished int, categoryID int) (int, error) {
 	result, err := db.Exec(`
-		INSERT INTO book (title, author, publisher, year_published, isbn, category_id)
+		INSERT INTO book (title, author, publisher, isbn, year_published, category_id)
 		VALUES (?, ?, ?, ?, ?, ?)
-	`, title, author, publisher, yearPublished, isbn, categoryID)
+	`, title, author, publisher, isbn, yearPublished, categoryID)
 	if err != nil {
 		return 0, err
 	}
@@ -163,25 +193,59 @@ func AddBook(title, author, publisher string, yearPublished int, isbn string, ca
 	return int(id), nil
 }
 
-// EditBook mengubah data buku
-func EditBook(bookID int, title, author, publisher string, yearPublished int, isbn string, categoryID int) error {
-	_, err := db.Exec(`
-		UPDATE book
-		SET title = ?, author = ?, publisher = ?, year_published = ?, isbn = ?, category_id = ?
-		WHERE book_id = ?
-	`, title, author, publisher, yearPublished, isbn, categoryID, bookID)
-	return err
+// EditBook mengubah data buku (consolidated to handle both with and without description)
+func EditBook(bookID int, title, author, publisher, isbn, description string, yearPublished int, categoryID int) error {
+	fmt.Printf("[v0] EditBook called - BookID: %d, Description length: %d, Description: %s\n", bookID, len(description), description)
+
+	sqlQuery := `UPDATE book SET title = ?, author = ?, publisher = ?, isbn = ?, description = ?, year_published = ?, category_id = ? WHERE book_id = ?`
+	fmt.Printf("[v0] SQL Query: %s\n", sqlQuery)
+	fmt.Printf("[v0] Parameters: title=%s, author=%s, publisher=%s, isbn=%s, description=%s, year=%d, catID=%d, bookID=%d\n",
+		title, author, publisher, isbn, description, yearPublished, categoryID, bookID)
+
+	result, err := db.Exec(sqlQuery,
+		title, author, publisher, isbn, description, yearPublished, categoryID, bookID,
+	)
+
+	if err != nil {
+		fmt.Printf("[v0] ERROR executing UPDATE: %v\n", err)
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		fmt.Printf("[v0] ERROR getting rows affected: %v\n", err)
+		return err
+	}
+
+	fmt.Printf("[v0] Rows affected: %d\n", rowsAffected)
+
+	var savedDescription string
+	err = db.QueryRow("SELECT description FROM book WHERE book_id = ?", bookID).Scan(&savedDescription)
+	if err != nil {
+		fmt.Printf("[v0] ERROR reading back description: %v\n", err)
+	} else {
+		fmt.Printf("[v0] Description saved in DB: %s\n", savedDescription)
+	}
+
+	return nil
 }
 
 // DeleteBook menghapus buku
 func DeleteBook(bookID int) error {
-	_, err := db.Exec("DELETE FROM book WHERE book_id = ?", bookID)
+	// First, return all active borrowed books
+	_, err := db.Exec("UPDATE borrow SET status = 'returned', return_date = NOW() WHERE book_id = ? AND status = 'active'", bookID)
+	if err != nil {
+		return err
+	}
+
+	// Then delete the book
+	_, err = db.Exec("DELETE FROM book WHERE book_id = ?", bookID)
 	return err
 }
 
 // ValidateBookData memvalidasi data buku
 func ValidateBookData(title, author, isbn string) bool {
-	if title == "" || author == "" || isbn == "" {
+	if title == "" || author == "" {
 		return false
 	}
 	return true
@@ -225,4 +289,108 @@ func GetLocationByID(id int) (*Location, error) {
 		return nil, err
 	}
 	return loc, nil
+}
+
+// UploadBook menambahkan buku baru dari pengguna
+func UploadBook(title, author, publisher, isbn, coverImage, location, description string, yearPublished int, categoryID int, uploadedBy int, uploaderName, uploaderEmail, uploaderPhone string) (int, error) {
+	result, err := db.Exec(`
+		INSERT INTO book (title, author, publisher, isbn, year_published, category_id, cover_image, location, description, uploaded_by, uploader_name, uploader_email, uploader_phone)
+		VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+	`, title, author, publisher, isbn, yearPublished, categoryID, coverImage, location, description, uploadedBy, uploaderName, uploaderEmail, uploaderPhone)
+	if err != nil {
+		return 0, err
+	}
+
+	id, err := result.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+	return int(id), nil
+}
+
+// GetBooksByUploader mengambil buku yang diunggah oleh pengguna tertentu
+func GetBooksByUploader(userID int) ([]Book, error) {
+	rows, err := db.Query(`
+		SELECT b.book_id, b.title, b.author, b.publisher, b.year_published, b.isbn, b.category_id, c.category_name,
+		       COALESCE(b.cover_image, ''), COALESCE(b.location, ''), COALESCE(b.status, 'pending'), COALESCE(b.description, ''),
+		       COALESCE(b.uploaded_by, 0), COALESCE(b.uploader_name, ''), COALESCE(b.uploader_email, ''), COALESCE(b.uploader_phone, '')
+		FROM book b
+		LEFT JOIN category c ON b.category_id = c.category_id
+		WHERE b.uploaded_by = ?
+		ORDER BY b.book_id DESC
+	`, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var books []Book
+	for rows.Next() {
+		var book Book
+		err := rows.Scan(&book.BookID, &book.Title, &book.Author, &book.Publisher, &book.YearPublished, &book.ISBN, &book.CategoryID, &book.CategoryName,
+			&book.CoverImage, &book.Location, &book.Status, &book.Description, &book.UploadedBy, &book.UploaderName, &book.UploaderEmail, &book.UploaderPhone)
+		if err != nil {
+			return nil, err
+		}
+		books = append(books, book)
+	}
+	return books, nil
+}
+
+// GetPendingBooks mengambil semua buku dengan status pending
+func GetPendingBooks() ([]Book, error) {
+	rows, err := db.Query(`
+		SELECT b.book_id, b.title, b.author, b.publisher, b.year_published, b.isbn, b.category_id, c.category_name,
+		       COALESCE(b.cover_image, ''), COALESCE(b.location, ''), COALESCE(b.status, 'pending'), COALESCE(b.description, ''),
+		       COALESCE(b.uploaded_by, 0), COALESCE(b.uploader_name, ''), COALESCE(b.uploader_email, ''), COALESCE(b.uploader_phone, '')
+		FROM book b
+		LEFT JOIN category c ON b.category_id = c.category_id
+		WHERE b.status = 'pending'
+		ORDER BY b.book_id DESC
+	`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var books []Book
+	for rows.Next() {
+		var book Book
+		err := rows.Scan(&book.BookID, &book.Title, &book.Author, &book.Publisher, &book.YearPublished, &book.ISBN, &book.CategoryID, &book.CategoryName,
+			&book.CoverImage, &book.Location, &book.Status, &book.Description, &book.UploadedBy, &book.UploaderName, &book.UploaderEmail, &book.UploaderPhone)
+		if err != nil {
+			return nil, err
+		}
+		books = append(books, book)
+	}
+	return books, nil
+}
+
+// GetAcceptedBooks mengambil semua buku dengan status accepted
+func GetAcceptedBooks() ([]Book, error) {
+	rows, err := db.Query(`
+		SELECT b.book_id, b.title, b.author, b.publisher, b.year_published, b.isbn, b.category_id, c.category_name,
+		       COALESCE(b.cover_image, ''), COALESCE(b.location, ''), COALESCE(b.status, 'pending'), COALESCE(b.description, ''),
+		       COALESCE(b.uploaded_by, 0), COALESCE(b.uploader_name, ''), COALESCE(b.uploader_email, ''), COALESCE(b.uploader_phone, '')
+		FROM book b
+		LEFT JOIN category c ON b.category_id = c.category_id
+		WHERE b.status = 'accepted'
+		ORDER BY b.book_id DESC
+	`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var books []Book
+	for rows.Next() {
+		var book Book
+		err := rows.Scan(&book.BookID, &book.Title, &book.Author, &book.Publisher, &book.YearPublished, &book.ISBN, &book.CategoryID, &book.CategoryName,
+			&book.CoverImage, &book.Location, &book.Status, &book.Description, &book.UploadedBy, &book.UploaderName, &book.UploaderEmail, &book.UploaderPhone)
+		if err != nil {
+			return nil, err
+		}
+		books = append(books, book)
+	}
+	return books, nil
 }
