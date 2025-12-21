@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -143,6 +144,8 @@ func addBook(w http.ResponseWriter, r *http.Request) {
 
 // editBook handler untuk mengubah data buku
 func editBook(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("[v0] ========== EDIT BOOK HANDLER CALLED ==========")
+
 	vars := mux.Vars(r)
 	bookID, err := strconv.Atoi(vars["id"])
 	if err != nil {
@@ -158,6 +161,7 @@ func editBook(w http.ResponseWriter, r *http.Request) {
 		YearPublished int    `json:"year_published"`
 		ISBN          string `json:"isbn"`
 		CategoryID    int    `json:"category_id"`
+		Description   string `json:"description"`
 	}
 
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
@@ -166,19 +170,24 @@ func editBook(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt.Printf("[v0] Handler received - BookID: %d, Description length: %d, Description: %s\n", bookID, len(req.Description), req.Description)
+
 	if !ValidateBookData(req.Title, req.Author, req.ISBN) {
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(map[string]string{"error": "Invalid book data"})
 		return
 	}
 
-	err = EditBook(bookID, req.Title, req.Author, req.Publisher, req.YearPublished, req.ISBN, req.CategoryID)
+	fmt.Printf("[v0] Calling EditBook with description: %s\n", req.Description)
+	err = EditBook(bookID, req.Title, req.Author, req.Publisher, req.ISBN, req.Description, req.YearPublished, req.CategoryID)
 	if err != nil {
+		fmt.Printf("[v0] ERROR from EditBook: %v\n", err)
 		w.Header().Set("Content-Type", "application/json")
 		json.NewEncoder(w).Encode(map[string]string{"error": "Failed to edit book"})
 		return
 	}
 
+	fmt.Printf("[v0] Book updated successfully\n")
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]interface{}{
 		"success": true,
