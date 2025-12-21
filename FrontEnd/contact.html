@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kontak Kami - LibMatch</title>
+    <title>Contact - LibMatch</title>
     <link rel="stylesheet" href="/FrontEnd/css/style.css">
 </head>
 <body>
-    <header class="content-header">
-        <div class="header-content-wrapper">
-            <div class="logo">
-                <a href="/FrontEnd/dashboard-logged-in.html">LibMatch</a>
-            </div>
+    <header class="site-header">
+        <div class="header-top">
+            <a href="#" class="logo logo-link" id="logoLink">LibMatch</a>
             
-            <nav class="secondary-nav">
+            <nav class="main-nav header-nav">
                 <a href="/FrontEnd/about.html">About</a>
                 <a href="/FrontEnd/help.html">Help</a>
                 <a href="/FrontEnd/terms.html">Terms</a>
                 <a href="/FrontEnd/privacy.html">Privacy</a>
-                <a href="#" class="active">Contact</a> </nav>
+                <a href="/FrontEnd/contact.html" class="active">Contact</a>
+            </nav>
 
             <div class="right-actions">
-                <div class="initial-avatar">A</div> 
+                <!-- Replaced initial-avatar div with img tag for profile picture -->
+                <img id="userAvatar" class="profile-avatar-img" src="/FrontEnd/images/placeholder-profile.png" alt="Profile">
                 <span class="lang-text">EN</span>
             </div>
         </div>
@@ -29,34 +29,50 @@
 
     <main class="static-content-page">
         <div class="content-container">
-            <a href="/FrontEnd/dashboard.html" class="back-link">
-                <span class="arrow-icon">&lt;</span> Kembali
-            </a>
-
-            <div class="terms-of-use-content">
+            <div class="about-hero">
                 <h1 class="page-title">Contact</h1>
-                <p class="last-updated">Diperbarui: 13 Januari 2025</p>
+                <p class="last-updated">Last Updated January 13, 2025</p>
+            </div>
 
-                <section class="term-section">
+            <div class="about-content">
+                <section class="about-section">
                     <h2>Contact E-Mail</h2>
-                    <p>By using the Services you agree to these Terms, any posted rules, guidelines, or additional terms that we may publish on or through the Services, and the Privacy Policy. These Terms constitute the entire agreement between you and LibMatch regarding the use of the Services.</p>
-                    <p>If you use the Services on behalf of an entity, you represent and warrant that you have authority to bind that entity to these Terms.</p>
+                    <p>For any questions, support requests, or feedback, please contact us at:</p>
+                    <p style="font-size: 1.2em; font-weight: 500; margin: 1em 0;">support@libmatch.com</p>
+                    <p>We typically respond within 24-48 hours during business days.</p>
                 </section>
 
-                <section class="term-section">
-                    <h2>2. Changes to the Terms</h2>
-                    <p>We may modify these Terms from time to time. We will make reasonable efforts to notify you of material changes (e.g., by email or in-app notice) and will post the revised Terms on the Services. Any changes become effective when posted. Your continued use of the Services after changes are posted constitutes acceptance of the updated Terms. If you do not agree to changes, stop using the Services.</p>
+                <section class="about-section">
+                    <h2>Customer Support</h2>
+                    <p>Our dedicated support team is available to help you with:</p>
+                    <ul class="about-list">
+                        <li>Account and registration issues</li>
+                        <li>Borrowing and return questions</li>
+                        <li>Payment and fee inquiries</li>
+                        <li>Technical problems with the app or website</li>
+                        <li>Suggestions and feedback</li>
+                    </ul>
                 </section>
 
-                <br>
-                <div class="libmatch-closing">
-                    <h2>Libmatch</h2>
-                    <p class="last-updated">Oct 21, 2025</p>
+                <section class="about-section">
+                    <h2>Business Hours</h2>
+                    <p>Our customer support operates during the following hours:</p>
+                    <ul class="about-list">
+                        <li>Monday - Friday: 9:00 AM - 6:00 PM (Local Time)</li>
+                        <li>Saturday: 10:00 AM - 4:00 PM (Local Time)</li>
+                        <li>Sunday: Closed</li>
+                    </ul>
+                    <p>For urgent matters outside business hours, please leave a message and we'll get back to you as soon as possible.</p>
+                </section>
+
+                <div class="about-footer-section">
+                    <div class="logo">LibMatch</div>
+                    <p class="last-updated">Jan 13, 2025</p>
                 </div>
             </div>
         </div>
     </main>
-
+    
     <footer class="site-footer">
         <nav class="footer-nav">
             <a href="/FrontEnd/about.html">About</a> | 
@@ -65,10 +81,24 @@
             <a href="/FrontEnd/privacy.html">Privacy</a> |
             <a href="/FrontEnd/contact.html">Contact</a> 
         </nav>
-        <p>&copy; 2025 LibMatch. Semua hak dilindungi.</p>
+        <p>&copy; 2025 LibMatch. All rights reserved.</p>
     </footer>
 
     <script src="/FrontEnd/js/auth.js"></script>
     <script src="/FrontEnd/js/features.js"></script>
+    <!-- Added script to handle conditional logo redirect -->
+    <script>
+        document.getElementById('logoLink').addEventListener('click', function(e) {
+            e.preventDefault();
+            const user = localStorage.getItem('user');
+            if (user) {
+                // If logged in, redirect to dashboard-logged-in.html
+                window.location.href = '/FrontEnd/dashboard-logged-in.html';
+            } else {
+                // If not logged in, redirect to index.html
+                window.location.href = '/FrontEnd/index.html';
+            }
+        });
+    </script>
 </body>
 </html>

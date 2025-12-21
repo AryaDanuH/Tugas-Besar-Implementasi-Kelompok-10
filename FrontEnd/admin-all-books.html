@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - All Books - LibMatch</title>
+    <link rel="stylesheet" href="/FrontEnd/css/style.css">
+    <style>
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            padding: 40px;
+            background: white;
+        }
+
+        .book-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .book-cover {
+            width: 150px;
+            height: 200px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .book-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .book-title {
+            font-weight: 600;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .book-author {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 5px;
+        }
+
+        .book-uploader {
+            font-size: 11px;
+            color: #666;
+        }
+
+        .book-status {
+            font-size: 11px;
+            margin-top: 5px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-icon {
+            width: 16px;
+            height: 16px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-edit {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #138496;
+        }
+
+        .btn-delete {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #c82333;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            color: #999;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #7c5cdb;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .btn-primary {
+            flex: 1;
+            padding: 12px;
+            background: #7c5cdb;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-primary:hover {
+            background: #6a4ec8;
+        }
+
+        .btn-secondary {
+            flex: 1;
+            padding: 12px;
+            background: #e8e8e8;
+            color: #333;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: #ddd;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 40px;
+            color: #999;
+            font-size: 16px;
+            grid-column: 1/-1;
+        }
+
+        .stats-container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            flex: 1;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #7c5cdb;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        @media (max-width: 1200px) {
+            .books-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .books-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+                padding: 20px;
+            }
+
+            .stats-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="header-top">
+            <div class="logo">LibMatch</div>
+            <div class="right-actions">
+                <a href="/FrontEnd/profile.html" class="profile-avatar-link">
+                    <!-- Replaced initial-avatar div with img tag for profile picture -->
+                    <img id="userAvatar" class="profile-avatar-img" src="/FrontEnd/images/placeholder-profile.png" alt="Profile">
+                </a>
+                <button class="logout-btn" onclick="logout()" title="Logout">Logout</button>
+                <span class="lang-text">EN</span>
+            </div>
+        </div>
+
+        <nav class="main-nav header-nav">
+            <a href="/FrontEnd/admin-all-books.html" class="active">All Books</a>
+            <a href="/FrontEnd/admin-request.html">Pending Requests</a>
+            <a href="/FrontEnd/upload-admin.html">Upload Book</a>
+        </nav>
+    </header>
+
+    <main class="main-content" style="background: white; min-height: 80vh;">
+        <div class="search-wrap header-search">
+            <input type="text" id="searchInput" placeholder="Search by title, author, or uploader..." />
+        </div>
+        <div style="padding: 40px;">
+            <h1 style="margin-bottom: 30px; font-size: 28px; color: #333;">All Accepted Books</h1>
+            
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalBooks">0</div>
+                    <div class="stat-label">Total Accepted Books</div>
+                </div>
+            </div>
+
+            <div class="books-grid" id="booksContainer">
+                <p class="empty-state">Loading books...</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Edit Book Modal -->
+    <div class="modal" id="editModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Edit Book</h2>
+                <button class="modal-close" onclick="closeEditModal()">&times;</button>
+            </div>
+            <form id="editBookForm" onsubmit="handleEditBook(event)">
+                <input type="hidden" id="editBookId">
+                
+                <div class="form-group">
+                    <label for="editTitle">Title</label>
+                    <input type="text" id="editTitle" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="editAuthor">Author</label>
+                    <input type="text" id="editAuthor" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="editPublisher">Publisher</label>
+                    <input type="text" id="editPublisher" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="editYear">Year Published</label>
+                    <input type="number" id="editYear" min="1900" max="2099">
+                </div>
+
+                <div class="form-group">
+                    <label for="editISBN">ISBN</label>
+                    <input type="text" id="editISBN" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="editCategory">Category</label>
+                    <select id="editCategory" required>
+                        <option value="">Select Category</option>
+                        <option value="1">Romance</option>
+                        <option value="2">Fantasy</option>
+                        <option value="3">Horror</option>
+                        <option value="4">Drama</option>
+                        <option value="5">Sci-Fi</option>
+                        <option value="6">Thriller</option>
+                        <option value="7">Mystery</option>
+                        <option value="8">Biography</option>
+                        <option value="9">History</option>
+                        <option value="10">Self-Help</option>
+                        <option value="11">Childrens Book</option>
+                        <option value="12">Memoir</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="editDescription">Description</label>
+                    <textarea id="editDescription" placeholder="Enter book description..."></textarea>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="submit" class="btn-primary">Save Changes</button>
+                    <button type="button" class="btn-secondary" onclick="closeEditModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/FrontEnd/js/auth.js"></script>
+    <script>
+        function initPage() {
+            const user = getCurrentUser()
+            if (!user || !user.user_id) {
+                window.location.href = "/FrontEnd/login.html"
+                return
+            }
+
+            // Check if user is admin
+            if (user.role !== 'admin') {
+                alert('Access denied. Admin only.')
+                window.location.href = "/FrontEnd/dashboard-logged-in.html"
+                return
+            }
+
+            // Set user avatar
+            const avatar = document.getElementById("userAvatar")
+            if (avatar && user.name) {
+                avatar.alt = user.name.charAt(0).toUpperCase()
+            }
+
+            // Load accepted books
+            loadAcceptedBooks()
+
+            // Setup search
+            document.getElementById('searchInput').addEventListener('input', handleSearch)
+        }
+
+        let allBooks = []
+
+        async function loadAcceptedBooks() {
+            try {
+                const response = await fetch('/api/books/accepted')
+                
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch accepted books: ${response.status}`)
+                }
+
+                allBooks = await response.json()
+                document.getElementById('totalBooks').textContent = allBooks.length
+                displayBooks(allBooks)
+            } catch (error) {
+                console.error('Error loading accepted books:', error)
+                const container = document.getElementById("booksContainer")
+                container.innerHTML = '<div class="empty-state">Error loading books. Please try again.</div>'
+            }
+        }
+
+        function displayBooks(books) {
+            const container = document.getElementById("booksContainer")
+
+            if (!books || books.length === 0) {
+                container.innerHTML = '<div class="empty-state">No accepted books available yet.</div>'
+                return
+            }
+
+            container.innerHTML = ""
+
+            books.forEach(book => {
+                const bookCard = document.createElement("div")
+                bookCard.className = "book-item"
+                bookCard.innerHTML = `
+                    <div class="book-cover">
+                        <img src="${book.cover_image || '/FrontEnd/images/book-cover.png'}" 
+                             alt="${book.title}" 
+                             onerror="this.src='/FrontEnd/images/placeholder-Image.png'">
+                    </div>
+                    <div class="book-title">${book.title}</div>
+                    <div class="book-author">${book.author}</div>
+                    <div class="book-uploader">Uploaded by: ${book.uploader_name || 'Unknown'}</div>
+                    <div class="book-status">
+                        <img src="/FrontEnd/images/Accepted.png" class="status-icon" alt="Accepted">
+                        Accepted
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn-small btn-edit" onclick="openEditModal(${book.book_id})">Edit</button>
+                        <button class="btn-small btn-delete" onclick="deleteBook(${book.book_id})">Delete</button>
+                    </div>
+                `
+                container.appendChild(bookCard)
+            })
+        }
+
+        function handleSearch(e) {
+            const query = e.target.value.toLowerCase()
+            
+            if (!query) {
+                displayBooks(allBooks)
+                return
+            }
+
+            const filtered = allBooks.filter(book => 
+                book.title.toLowerCase().includes(query) ||
+                book.author.toLowerCase().includes(query) ||
+                (book.uploader_name && book.uploader_name.toLowerCase().includes(query))
+            )
+
+            displayBooks(filtered)
+        }
+
+        // Edit Modal Functions
+        async function openEditModal(bookId) {
+            try {
+                const response = await fetch(`/api/books/${bookId}`)
+                
+                if (!response.ok) {
+                    throw new Error('Failed to fetch book details')
+                }
+
+                const book = await response.json()
+                
+                document.getElementById('editBookId').value = book.book_id
+                document.getElementById('editTitle').value = book.title
+                document.getElementById('editAuthor').value = book.author
+                document.getElementById('editPublisher').value = book.publisher || ''
+                document.getElementById('editYear').value = book.year_published || ''
+                document.getElementById('editISBN').value = book.isbn || ''
+                document.getElementById('editCategory').value = book.category_id || ''
+                document.getElementById('editDescription').value = book.description || ''
+                
+                document.getElementById('editModal').classList.add('active')
+            } catch (error) {
+                console.error('Error loading book details:', error)
+                alert('Failed to load book details. Please try again.')
+            }
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('active')
+            document.getElementById('editBookForm').reset()
+        }
+
+        async function handleEditBook(event) {
+            event.preventDefault()
+
+            const bookId = document.getElementById('editBookId').value
+            const bookData = {
+                title: document.getElementById('editTitle').value,
+                author: document.getElementById('editAuthor').value,
+                publisher: document.getElementById('editPublisher').value,
+                year_published: parseInt(document.getElementById('editYear').value) || 0,
+                isbn: document.getElementById('editISBN').value,
+                category_id: parseInt(document.getElementById('editCategory').value),
+                description: document.getElementById('editDescription').value
+            }
+
+            try {
+                const response = await fetch(`/api/books/${bookId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(bookData)
+                })
+
+                const result = await response.json()
+
+                if (result.success) {
+                    alert('Book updated successfully!')
+                    closeEditModal()
+                    loadAcceptedBooks()
+                } else {
+                    alert('Failed to update book: ' + (result.error || 'Unknown error'))
+                }
+            } catch (error) {
+                console.error('Error updating book:', error)
+                alert('Error updating book. Please try again.')
+            }
+        }
+
+        // Delete Book Function
+        async function deleteBook(bookId) {
+            if (!confirm('Are you sure you want to delete this book? This action cannot be undone.')) {
+                return
+            }
+
+            try {
+                const response = await fetch(`/api/books/${bookId}`, {
+                    method: 'DELETE'
+                })
+
+                const result = await response.json()
+
+                if (result.success) {
+                    alert('Book deleted successfully!')
+                    loadAcceptedBooks()
+                } else {
+                    alert('Failed to delete book: ' + (result.error || 'Unknown error'))
+                }
+            } catch (error) {
+                console.error('Error deleting book:', error)
+                alert('Error deleting book. Please try again.')
+            }
+        }
+
+        window.addEventListener("load", initPage)
+    </script>
+</body>
+</html>

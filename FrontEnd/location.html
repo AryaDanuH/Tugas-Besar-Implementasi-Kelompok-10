@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Store - LibMatch</title>
+    <!-- Added Leaflet map library CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="/FrontEnd/css/style.css">
+    <!-- Updated CSS reference from find-store.css to location.css -->
+    <link rel="stylesheet" href="/FrontEnd/css/location.css">
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="header-top">
+            <div class="logo">LibMatch</div>
+            <div class="search-wrap header-search">
+                <input type="text" id="searchInput" placeholder="Search by author, title, or name..." />
+            </div>
+            <div class="right-actions">
+                <a href="/FrontEnd/cart.html" class="cart-icon-link" id="cartLink" style="margin-right: 15px; display: none;">
+                    <img src="/FrontEnd/images/cart.png" alt="Cart" style="width: 28px; height: 28px; cursor: pointer;">
+                </a>
+                <a href="/FrontEnd/profile.html" class="profile-avatar-link" id="profileLink" style="display: none;">
+                    <img id="userAvatar" class="profile-avatar-img" src="/FrontEnd/images/placeholder-profile.png" alt="Profile">
+                </a>
+                <button class="logout-btn" id="logoutBtn" onclick="logout()" title="Logout" style="display: none;">Logout</button>
+                <button class="login-btn" id="loginBtn" onclick="window.location.href='/FrontEnd/login.html'" style="display: none;">Login</button>
+                <span class="lang-text">EN</span>
+            </div>
+        </div>
+
+        <nav class="main-nav header-nav">
+            <a href="#" id="homeLink">Home</a>
+            <a href="/FrontEnd/top-seller.html">Bestseller</a>
+            <a href="/FrontEnd/select-categories.html">Category</a>
+            <a href="/FrontEnd/location.html" class="active">Locations</a>
+            <a href="/FrontEnd/your-books.html" id="myBooksLink" style="display: none;">My Books</a>
+        </nav>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="find-store-main">
+        <div class="store-container">
+            <!-- LEFT SECTION: MAP -->
+            <div class="store-map-section">
+                <div class="map-header">
+                    <h2>Nearest Store</h2>
+                    <p>Your Location</p>
+                </div>
+                <!-- Added functional Leaflet map -->
+                <div class="find-store-map">
+                    <div id="map" style="width: 100%; height: 100%;"></div>
+                </div>
+            </div>
+
+            <!-- RIGHT SECTION: STORE LIST -->
+            <div class="store-list-section">
+                <div class="store-list-header">
+                    <h3>Nearest Stores</h3>
+                    <p class="store-count">3 stores found</p>
+                </div>
+
+                <div class="store-list" id="storeList">
+                    <div class="store-card">
+                        <div class="store-name">LibMatch Buahbatu</div>
+                        <div class="store-address">Jl. Soekarno Hatta No.713, Sekejati, Kec. Buahbatu, Bandung</div>
+                        <div class="store-distance">2.5 km from your location</div>
+                        <div class="store-hours">Open: 09:00 - 21:00</div>
+                    </div>
+
+                    <div class="store-card">
+                        <div class="store-name">LibMatch Bandung Wetan</div>
+                        <div class="store-address">Jl. Kebon Jati, Bandung Wetan, Kec. Bandung Wetan, Bandung</div>
+                        <div class="store-distance">4.2 km from your location</div>
+                        <div class="store-hours">Open: 10:00 - 22:00</div>
+                    </div>
+
+                    <div class="store-card">
+                        <div class="store-name">LibMatch Cihampelas</div>
+                        <div class="store-address">Jl. Cihampelas, Tamansari, Kec. Bandung Wetan, Bandung</div>
+                        <div class="store-distance">5.8 km from your location</div>
+                        <div class="store-hours">Open: 08:00 - 20:00</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <nav class="footer-nav">
+            <a href="/FrontEnd/about.html">About</a> | 
+            <a href="/FrontEnd/help.html">Help</a> | 
+            <a href="/FrontEnd/terms.html">Terms</a> | 
+            <a href="/FrontEnd/privacy.html">Privacy</a> |
+            <a href="/FrontEnd/contact.html">Contact</a> 
+        </nav>
+        <p>&copy; 2025 LibMatch. All rights reserved.</p>
+    </footer>
+
+    <!-- Added Leaflet map library JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="/FrontEnd/js/auth.js"></script>
+    <script>
+        const locations = [
+            {
+                name: 'LibMatch Buahbatu',
+                address: 'Jl. Soekarno Hatta No.713, Sekejati, Kec. Buahbatu, Bandung',
+                lat: -6.9430,
+                lng: 107.6350,
+                distance: '2.5 km from your location',
+                hours: 'Open: 09:00 - 21:00'
+            },
+            {
+                name: 'LibMatch Bandung Wetan',
+                address: 'Jl. Kebon Jati, Bandung Wetan, Kec. Bandung Wetan, Bandung',
+                lat: -6.9147,
+                lng: 107.6098,
+                distance: '4.2 km from your location',
+                hours: 'Open: 10:00 - 22:00'
+            },
+            {
+                name: 'LibMatch Cihampelas',
+                address: 'Jl. Cihampelas, Tamansari, Kec. Bandung Wetan, Bandung',
+                lat: -6.8996,
+                lng: 107.6067,
+                distance: '5.8 km from your location',
+                hours: 'Open: 08:00 - 20:00'
+            }
+        ];
+
+        let userLocation = { lat: -6.9175, lng: 107.6191 }; // Bandung center
+        let map = null;
+
+        function initMap() {
+            if (map) return; // Already initialized
+
+            // Initialize Leaflet map
+            map = L.map('map').setView([userLocation.lat, userLocation.lng], 13);
+
+            // Add OpenStreetMap tiles
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            // Add user location marker
+            const userIcon = L.icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41]
+            });
+
+            L.marker([userLocation.lat, userLocation.lng], { icon: userIcon })
+                .addTo(map)
+                .bindPopup('Your Location')
+                .openPopup();
+
+            // Add store location markers
+            locations.forEach((location, index) => {
+                const storeIcon = L.icon({
+                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                    shadowSize: [41, 41]
+                });
+
+                L.marker([location.lat, location.lng], { icon: storeIcon })
+                    .addTo(map)
+                    .bindPopup(`<strong>${location.name}</strong><br>${location.address}`);
+            });
+        }
+
+        function getLocation() {
+            // Try to get user's actual location
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        userLocation.lat = position.coords.latitude;
+                        userLocation.lng = position.coords.longitude;
+                        console.log("[v0] User location obtained:", userLocation);
+                        initMap();
+                    },
+                    function(error) {
+                        console.log("[v0] Geolocation error, using default:", error);
+                        initMap();
+                    }
+                );
+            } else {
+                console.log("[v0] Geolocation not supported, using default");
+                initMap();
+            }
+        }
+
+        function centerMapOnStore(index) {
+            const location = locations[index];
+            if (map) {
+                map.setView([location.lat, location.lng], 15);
+            }
+        }
+
+        // Click card to center map on location
+        function attachStoreCardListeners() {
+            const storeCards = document.querySelectorAll('.store-card');
+            storeCards.forEach((card, index) => {
+                card.style.cursor = 'pointer';
+                card.addEventListener('click', () => {
+                    centerMapOnStore(index);
+                });
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuthAndUpdateUI();
+            attachStoreCardListeners();
+            
+            // Initialize map with a small delay to ensure DOM is ready
+            setTimeout(() => {
+                getLocation();
+            }, 100);
+        });
+
+        function checkAuthAndUpdateUI() {
+            const user = getCurrentUser();
+            if (user) {
+                document.getElementById('logoutBtn').style.display = 'block';
+                document.getElementById('profileLink').style.display = 'block';
+                document.getElementById('cartLink').style.display = 'block';
+                document.getElementById('myBooksLink').style.display = 'block';
+                document.getElementById('loginBtn').style.display = 'none';
+                document.getElementById('homeLink').href = '/FrontEnd/dashboard-logged-in.html';
+            } else {
+                document.getElementById('logoutBtn').style.display = 'none';
+                document.getElementById('profileLink').style.display = 'none';
+                document.getElementById('cartLink').style.display = 'none';
+                document.getElementById('myBooksLink').style.display = 'none';
+                document.getElementById('loginBtn').style.display = 'block';
+                document.getElementById('homeLink').href = '/FrontEnd/index.html';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout - LibMatch</title>
+    <link rel="stylesheet" href="/FrontEnd/css/style.css">
+    <style>
+        .checkout-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+            background: white;
+            min-height: 80vh;
+        }
+
+        .checkout-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 24px;
+            color: #666;
+        }
+
+        /* Updated tab styles to match dashboard navigation */
+        .checkout-tabs {
+            display: flex;
+            gap: 0;
+            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: 30px;
+        }
+
+        .checkout-tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            font-size: 15px;
+            color: #666;
+            background: transparent;
+            border: none;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .checkout-tab:hover {
+            color: #333;
+        }
+
+        .checkout-tab.active {
+            color: #163ab6;
+            border-bottom-color: #163ab6;
+            font-weight: 500;
+        }
+
+        .checkout-content {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 40px;
+        }
+
+        .checkout-form {
+            display: none;
+        }
+
+        .checkout-form.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .order-summary {
+            background: #fafafa;
+            padding: 25px;
+            border-radius: 8px;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .summary-books {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .summary-book {
+            display: flex;
+            gap: 15px;
+        }
+
+        .summary-book-cover {
+            width: 60px;
+            height: 85px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .summary-book-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .summary-book-info {
+            flex: 1;
+        }
+
+        .summary-book-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .summary-book-author {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .summary-book-desc {
+            font-size: 11px;
+            color: #666;
+            margin-top: 5px;
+            line-height: 1.4;
+        }
+
+        .summary-calculations {
+            border-top: 1px solid #e0e0e0;
+            padding-top: 15px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+
+        .summary-total {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 15px;
+            border-top: 2px solid #e0e0e0;
+            font-size: 16px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .pay-btn {
+            width: 100%;
+            padding: 15px;
+            background: #c4f34e;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .pay-btn:hover {
+            background: #b3e03d;
+        }
+
+        .instalment-info {
+            background: #fff3cd;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            margin: 15px 0;
+        }
+
+        @media (max-width: 768px) {
+            .checkout-content {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-top">
+            <div class="logo">LibMatch</div>
+            <div class="right-actions">
+                <!-- Added cart icon to checkout page header -->
+                <a href="/FrontEnd/cart.html" class="cart-icon-link" style="margin-right: 15px;">
+                    <img src="/FrontEnd/images/cart.png" alt="Cart" style="width: 28px; height: 28px; cursor: pointer;">
+                </a>
+                <a href="/FrontEnd/profile.html" class="profile-avatar-link">
+                    <img id="userAvatar" class="profile-avatar-img" src="/FrontEnd/images/placeholder-profile.png" alt="Profile">
+                </a>
+                <button class="logout-btn" onclick="logout()" title="Logout">Logout</button>
+                <span class="lang-text">EN</span>
+            </div>
+        </div>
+        <nav class="main-nav header-nav">
+            <a href="/FrontEnd/dashboard-logged-in.html">Home</a>
+            <a href="#">Bestseller</a>
+            <a href="#">Category</a>
+            <a href="#">Borrower</a>
+            <a href="/FrontEnd/your-books.html">My Books</a>
+        </nav>
+    </header>
+
+    <main class="main-content">
+        <div class="checkout-container">
+            <div class="checkout-header">
+                <button class="back-button" onclick="window.history.back()">←</button>
+            </div>
+
+            <div class="checkout-tabs">
+                <div class="checkout-tab active" onclick="switchTab('pickup')">Pick up</div>
+                <div class="checkout-tab" onclick="switchTab('delivery')">Delivery</div>
+            </div>
+
+            <div class="checkout-content">
+                <div>
+                    <!-- Pick Up Form -->
+                    <!-- Made pickup form the default active tab and updated loan location to dropdown -->
+                    <form class="checkout-form active" id="pickupForm">
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-input" id="pickupEmail" placeholder="Remember my email">
+                        </div>
+
+                        <h3 style="margin: 25px 0 15px; font-size: 16px;">Pick Up</h3>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">First name</label>
+                                <input type="text" class="form-input" id="pickupFirstName">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Last name</label>
+                                <input type="text" class="form-input" id="pickupLastName">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Loan Location</label>
+                            <select class="form-select" id="pickupLocation">
+                                <option value="">Select loan location</option>
+                                <option value="1">LibMatch Transmart Buahbatu</option>
+                                <option value="2">LibMatch Kebon Jati</option>
+                                <option value="3">LibMatch Cihampelas</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Phone</label>
+                            <input type="tel" class="form-input" id="pickupPhone">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Select Option</label>
+                            <select class="form-select">
+                                <option value="">Choose option</option>
+                                <option value="standard">Standard Pickup</option>
+                                <option value="express">Express Pickup</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Note</label>
+                            <input type="text" class="form-input" placeholder="Optional notes">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Payment Method</label>
+                            <select class="form-select">
+                                <option value="">Choose payment method</option>
+                                <option value="cash">Cash</option>
+                                <option value="card">Credit/Debit Card</option>
+                                <option value="ewallet">E-Wallet</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Discount code or gift card</label>
+                            <div style="display: flex; gap: 10px;">
+                                <input type="text" class="form-input" placeholder="Enter code">
+                                <button type="button" style="padding: 0 20px; border: 1px solid #e0e0e0; border-radius: 6px; background: white; cursor: pointer;">Apply</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Delivery Form -->
+                    <form class="checkout-form" id="deliveryForm">
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-input" id="deliveryEmail" placeholder="Remember my email">
+                        </div>
+
+                        <h3 style="margin: 25px 0 15px; font-size: 16px;">Delivery</h3>
+
+                        <div class="form-group">
+                            <label class="form-label">Country/Region</label>
+                            <select class="form-select">
+                                <option value="ID">Indonesia</option>
+                            </select>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">First name</label>
+                                <input type="text" class="form-input" id="deliveryFirstName">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Last name</label>
+                                <input type="text" class="form-input" id="deliveryLastName">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Address</label>
+                            <input type="text" class="form-input" id="deliveryAddress">
+                        </div>
+
+                        <!-- Updated delivery form to autofill from user profile -->
+                        <div class="form-group">
+                            <label class="form-label">City</label>
+                            <input type="text" class="form-input" id="deliveryCity">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Province</label>
+                                <select class="form-select" id="deliveryProvince">
+                                    <option value="">Select province</option>
+                                    <option value="Aceh">Aceh</option>
+                                    <option value="North Sumatra">North Sumatra</option>
+                                    <option value="West Sumatra">West Sumatra</option>
+                                    <option value="Riau">Riau</option>
+                                    <option value="Jambi">Jambi</option>
+                                    <option value="South Sumatra">South Sumatra</option>
+                                    <option value="Bengkulu">Bengkulu</option>
+                                    <option value="Lampung">Lampung</option>
+                                    <option value="Bangka Belitung">Bangka Belitung</option>
+                                    <option value="Riau Islands">Riau Islands</option>
+                                    <option value="Jakarta">Jakarta</option>
+                                    <option value="West Java">West Java</option>
+                                    <option value="Central Java">Central Java</option>
+                                    <option value="Yogyakarta">Yogyakarta</option>
+                                    <option value="East Java">East Java</option>
+                                    <option value="Banten">Banten</option>
+                                    <option value="Bali">Bali</option>
+                                    <option value="West Nusa Tenggara">West Nusa Tenggara</option>
+                                    <option value="East Nusa Tenggara">East Nusa Tenggara</option>
+                                    <option value="West Kalimantan">West Kalimantan</option>
+                                    <option value="Central Kalimantan">Central Kalimantan</option>
+                                    <option value="South Kalimantan">South Kalimantan</option>
+                                    <option value="East Kalimantan">East Kalimantan</option>
+                                    <option value="North Kalimantan">North Kalimantan</option>
+                                    <option value="North Sulawesi">North Sulawesi</option>
+                                    <option value="Central Sulawesi">Central Sulawesi</option>
+                                    <option value="South Sulawesi">South Sulawesi</option>
+                                    <option value="Southeast Sulawesi">Southeast Sulawesi</option>
+                                    <option value="Gorontalo">Gorontalo</option>
+                                    <option value="West Sulawesi">West Sulawesi</option>
+                                    <option value="Maluku">Maluku</option>
+                                    <option value="North Maluku">North Maluku</option>
+                                    <option value="Papua">Papua</option>
+                                    <option value="West Papua">West Papua</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Postal Code</label>
+                                <input type="text" class="form-input" id="deliveryPostal">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Phone</label>
+                            <input type="tel" class="form-input" id="deliveryPhone">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Select Option</label>
+                            <select class="form-select">
+                                <option value="">Choose option</option>
+                                <option value="standard">Standard Delivery</option>
+                                <option value="express">Express Delivery</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Note</label>
+                            <input type="text" class="form-input" placeholder="Optional notes">
+                        </div>
+
+                        <div class="instalment-info">
+                            <strong>Instans 1 - 3 Hour (Rp 23,000)</strong><br>
+                            Estimated to arrive before 00:00 - 18:00 WIB
+                        </div>
+
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="shippingInsurance">
+                            <label for="shippingInsurance" style="font-size: 13px;">Use shipping insurance (Rp200)</label>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Payment Method</label>
+                            <select class="form-select">
+                                <option value="">Choose payment method</option>
+                                <option value="cash">Cash on Delivery</option>
+                                <option value="card">Credit/Debit Card</option>
+                                <option value="ewallet">E-Wallet</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Discount code or gift card</label>
+                            <div style="display: flex; gap: 10px;">
+                                <input type="text" class="form-input" placeholder="Enter code">
+                                <button type="button" style="padding: 0 20px; border: 1px solid #e0e0e0; border-radius: 6px; background: white; cursor: pointer;">Apply</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="order-summary">
+                    <div class="summary-books" id="summaryBooks"></div>
+                    <div class="summary-calculations" id="summaryCalculations"></div>
+                    <button class="pay-btn" onclick="completePurchase()">Pay now</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/FrontEnd/js/auth.js"></script>
+    <script>
+        let checkoutItems = [];
+        let currentDeliveryType = 'pickup'; // Default to pickup tab
+
+        function switchTab(tab) {
+            currentDeliveryType = tab;
+            
+            document.querySelectorAll('.checkout-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.checkout-form').forEach(f => f.classList.remove('active'));
+            
+            if (tab === 'pickup') {
+                document.querySelectorAll('.checkout-tab')[0].classList.add('active');
+                document.getElementById('pickupForm').classList.add('active');
+            } else {
+                document.querySelectorAll('.checkout-tab')[1].classList.add('active');
+                document.getElementById('deliveryForm').classList.add('active');
+            }
+            
+            updateSummary();
+        }
+
+        function initCheckout() {
+            const user = getCurrentUser();
+            if (!user || !user.user_id) {
+                alert('Please log in to checkout');
+                window.location.href = '/FrontEnd/login.html';
+                return;
+            }
+
+            const checkoutData = localStorage.getItem('libmatch_checkout');
+            if (checkoutData) {
+                checkoutItems = JSON.parse(checkoutData);
+                localStorage.removeItem('libmatch_checkout');
+            } else {
+                const cartKey = `libmatch_cart_${user.user_id}`;
+                checkoutItems = JSON.parse(localStorage.getItem(cartKey) || '[]');
+            }
+
+            if (checkoutItems.length === 0) {
+                alert('No items to checkout');
+                window.location.href = '/FrontEnd/cart.html';
+                return;
+            }
+
+            autofillUserInfo(user);
+            
+            displayCheckoutSummary();
+            updateSummary();
+        }
+
+        function autofillUserInfo(user) {
+            // Autofill email
+            if (user.email) {
+                document.getElementById('pickupEmail').value = user.email;
+                document.getElementById('deliveryEmail').value = user.email;
+            }
+
+            // Split name into first and last name
+            if (user.name) {
+                const nameParts = user.name.split(' ');
+                const firstName = nameParts[0] || '';
+                const lastName = nameParts.slice(1).join(' ') || '';
+                
+                document.getElementById('pickupFirstName').value = firstName;
+                document.getElementById('pickupLastName').value = lastName;
+                document.getElementById('deliveryFirstName').value = firstName;
+                document.getElementById('deliveryLastName').value = lastName;
+            }
+
+            // Autofill phone
+            if (user.phone) {
+                document.getElementById('pickupPhone').value = user.phone;
+                document.getElementById('deliveryPhone').value = user.phone;
+            }
+
+            // Autofill delivery address fields
+            if (user.address) {
+                document.getElementById('deliveryAddress').value = user.address;
+            }
+            if (user.city) {
+                document.getElementById('deliveryCity').value = user.city;
+            }
+            if (user.province) {
+                document.getElementById('deliveryProvince').value = user.province;
+            }
+            if (user.postal_code) {
+                document.getElementById('deliveryPostal').value = user.postal_code;
+            }
+        }
+
+        function displayCheckoutSummary() {
+            const summaryContainer = document.getElementById('summaryBooks');
+            summaryContainer.innerHTML = '';
+
+            checkoutItems.forEach(item => {
+                const bookSummary = document.createElement('div');
+                bookSummary.className = 'summary-book';
+                bookSummary.innerHTML = `
+                    <div class="summary-book-cover">
+                        <img src="${item.cover_image || '/FrontEnd/images/book-cover.png'}" alt="${item.title}">
+                    </div>
+                    <div class="summary-book-info">
+                        <div class="summary-book-title">${item.title}</div>
+                        <div class="summary-book-author">${item.author}</div>
+                        ${item.description ? `<div class="summary-book-desc">${item.description.substring(0, 80)}...</div>` : ''}
+                    </div>
+                `;
+                summaryContainer.appendChild(bookSummary);
+            });
+        }
+
+        function updateSummary() {
+            const basePrice = 40000;
+            const subtotal = checkoutItems.length * basePrice;
+            
+            let deliveryFee = 0;
+            let tax = 0;
+            let insurance = 0;
+            
+            if (currentDeliveryType === 'delivery') {
+                deliveryFee = 23000;
+                const insuranceCheckbox = document.getElementById('shippingInsurance');
+                if (insuranceCheckbox && insuranceCheckbox.checked) {
+                    insurance = 200;
+                }
+            }
+            
+            tax = Math.round(subtotal * 0.1);
+            const total = subtotal + deliveryFee + tax + insurance;
+
+            const summaryCalculations = document.getElementById('summaryCalculations');
+            summaryCalculations.innerHTML = `
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span>Rp ${subtotal.toLocaleString('id-ID')}</span>
+                </div>
+                ${deliveryFee > 0 ? `
+                <div class="summary-row">
+                    <span>Delivery</span>
+                    <span>Rp ${deliveryFee.toLocaleString('id-ID')}</span>
+                </div>
+                ` : ''}
+                ${insurance > 0 ? `
+                <div class="summary-row">
+                    <span>Shipping Insurance</span>
+                    <span>Rp ${insurance.toLocaleString('id-ID')}</span>
+                </div>
+                ` : ''}
+                <div class="summary-row">
+                    <span>Tax (10%)</span>
+                    <span>Rp ${tax.toLocaleString('id-ID')}</span>
+                </div>
+                <div class="summary-total">
+                    <span>Total</span>
+                    <span>Rp ${total.toLocaleString('id-ID')}</span>
+                </div>
+            `;
+        }
+
+        async function completePurchase() {
+            const user = getCurrentUser();
+            if (!user || !user.user_id) {
+                alert('Please log in to complete purchase');
+                return;
+            }
+
+            if (currentDeliveryType === 'pickup') {
+                const loanLocation = document.getElementById('pickupLocation').value;
+                if (!loanLocation) {
+                    alert('Please select a loan location');
+                    return;
+                }
+            }
+
+            try {
+                const successfulBorrows = [];
+                const failedBorrows = [];
+
+                for (const item of checkoutItems) {
+                    const response = await fetch('/api/borrows', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            user_id: user.user_id,
+                            book_id: item.book_id, // Changed from book_location_id to book_id
+                            delivery_type: currentDeliveryType,
+                        }),
+                    });
+
+                    let result;
+                    const responseText = await response.text();
+                    
+                    try {
+                        result = JSON.parse(responseText);
+                    } catch (parseError) {
+                        console.error('[v0] JSON parse error:', parseError);
+                        console.error('[v0] Response text:', responseText);
+                        failedBorrows.push({ book_id: item.book_id, error: 'Invalid server response' });
+                        continue;
+                    }
+
+                    if (response.ok) {
+                        successfulBorrows.push(item);
+                    } else {
+                        failedBorrows.push({ book_id: item.book_id, error: result.message || 'Unknown error' });
+                    }
+                }
+
+                if (successfulBorrows.length > 0) {
+                    const cartKey = `libmatch_cart_${user.user_id}`;
+                    localStorage.removeItem(cartKey);
+                }
+
+                if (failedBorrows.length === 0) {
+                    alert('Purchase completed successfully!');
+                    window.location.href = '/FrontEnd/your-books.html';
+                } else if (successfulBorrows.length > 0) {
+                    alert(`${successfulBorrows.length} book(s) borrowed successfully. ${failedBorrows.length} failed.`);
+                    window.location.href = '/FrontEnd/your-books.html';
+                } else {
+                    alert('Purchase failed: ' + failedBorrows.map(f => f.error).join(', '));
+                }
+            } catch (error) {
+                console.error('[v0] Error completing purchase:', error);
+                alert('An error occurred during purchase. Please try again.');
+            }
+        }
+
+        const insuranceCheckbox = document.getElementById('shippingInsurance');
+        if (insuranceCheckbox) {
+            insuranceCheckbox.addEventListener('change', updateSummary);
+        }
+
+        window.addEventListener('load', initCheckout);
+    </script>
+</body>
+</html>

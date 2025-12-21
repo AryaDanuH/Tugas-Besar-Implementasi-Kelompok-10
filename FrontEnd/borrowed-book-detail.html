@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Details - LibMatch</title>
+    <link rel="stylesheet" href="/FrontEnd/css/style.css">
+    <style>
+        .book-detail-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+            background: white;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background: transparent;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            color: #333;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            color: #7c5cdb;
+        }
+
+        .book-detail-content {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 50px;
+            margin-top: 20px;
+        }
+
+        .book-cover-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .book-cover-large {
+            width: 100%;
+            max-width: 300px;
+            aspect-ratio: 2 / 3;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .book-cover-large img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #f5f5f5;
+        }
+
+        .return-book-btn {
+            width: 100%;
+            padding: 14px;
+            background: #f59e0b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .return-book-btn:hover {
+            background: #d97706;
+        }
+
+        .book-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .book-title-large {
+            font-size: 32px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 25px;
+        }
+
+        .book-meta-tags {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .meta-tag {
+            display: flex;
+            flex-direction: column;
+            padding: 12px 20px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background: #fafafa;
+        }
+
+        .meta-tag-label {
+            font-size: 11px;
+            color: #999;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .meta-tag-value {
+            font-size: 14px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .synopsis-section {
+            margin-top: 20px;
+        }
+
+        .synopsis-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .synopsis-text {
+            font-size: 14px;
+            line-height: 1.8;
+            color: #666;
+            text-align: justify;
+        }
+
+        @media (max-width: 768px) {
+            .book-detail-content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .book-cover-large {
+                max-width: 250px;
+                aspect-ratio: 2 / 3;
+                margin: 0 auto;
+            }
+
+            .book-title-large {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-top">
+            <div class="logo">LibMatch</div>
+            <div class="right-actions">
+                <a href="/FrontEnd/profile.html" class="profile-avatar-link">
+                    <img id="userAvatar" class="profile-avatar-img" src="/FrontEnd/images/placeholder-profile.png" alt="Profile">
+                </a>
+                <button class="logout-btn" onclick="logout()" title="Logout">Logout</button>
+                <span class="lang-text">EN</span>
+            </div>
+        </div>
+
+        <nav class="main-nav header-nav">
+            <a href="/FrontEnd/dashboard-logged-in.html">Home</a>
+            <a href="#">Bestseller</a>
+            <a href="#">Category</a>
+            <a href="#">Borrower</a>
+            <a href="/FrontEnd/your-books.html" class="active">My Books</a>
+        </nav>
+    </header>
+
+    <main class="main-content" style="background: white; min-height: 80vh;">
+        <div class="book-detail-container">
+            <button class="back-button" onclick="window.history.back()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+            </button>
+
+            <div class="book-detail-content">
+                <div class="book-cover-section">
+                    <div class="book-cover-large">
+                        <img id="bookCover" src="/FrontEnd/images/book-cover.png" alt="Book Cover">
+                    </div>
+                    <button class="return-book-btn" onclick="returnBook()">Return Book</button>
+                </div>
+
+                <div class="book-info">
+                    <h1 class="book-title-large" id="bookTitle">Loading...</h1>
+
+                    <div class="book-meta-tags">
+                        <div class="meta-tag">
+                            <span class="meta-tag-label">Author</span>
+                            <span class="meta-tag-value" id="bookAuthor">-</span>
+                        </div>
+                        <div class="meta-tag">
+                            <span class="meta-tag-label">Genre</span>
+                            <span class="meta-tag-value" id="bookGenre">-</span>
+                        </div>
+                        <div class="meta-tag">
+                            <span class="meta-tag-label">Year</span>
+                            <span class="meta-tag-value" id="bookYear">-</span>
+                        </div>
+                    </div>
+
+                    <div class="synopsis-section">
+                        <h3 class="synopsis-title">Synopsis</h3>
+                        <p class="synopsis-text" id="bookSynopsis">No description available.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="/FrontEnd/js/auth.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const borrowId = urlParams.get('borrow_id');
+        let currentBorrow = null;
+
+        async function loadBookDetails() {
+            const user = getCurrentUser();
+            if (!user || !user.user_id) {
+                window.location.href = '/FrontEnd/login.html';
+                return;
+            }
+
+            if (!borrowId) {
+                alert('Borrow ID not found');
+                window.location.href = '/FrontEnd/your-books.html?tab=loaning';
+                return;
+            }
+
+            try {
+                // Fetch borrowed books from database
+                const response = await fetch(`${API_URL}/users/${user.user_id}/borrowed-books`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch borrowed books');
+                }
+
+                const borrowedBooks = await response.json();
+                currentBorrow = borrowedBooks.find(b => b.borrow_id == borrowId);
+
+                if (!currentBorrow) {
+                    alert('Book not found');
+                    window.location.href = '/FrontEnd/your-books.html?tab=loaning';
+                    return;
+                }
+
+                // Display book details
+                document.getElementById('bookTitle').textContent = currentBorrow.title || 'Untitled';
+                document.getElementById('bookAuthor').textContent = currentBorrow.author || 'Unknown Author';
+                document.getElementById('bookGenre').textContent = currentBorrow.category_name || 'Uncategorized';
+                document.getElementById('bookYear').textContent = currentBorrow.year_published || 'N/A';
+                document.getElementById('bookSynopsis').textContent = currentBorrow.description || 'No description available.';
+                
+                const coverImg = document.getElementById('bookCover');
+                if (currentBorrow.cover_image) {
+                    coverImg.src = currentBorrow.cover_image;
+                }
+
+                document.title = `${currentBorrow.title} - LibMatch`;
+            } catch (error) {
+                console.error('Error loading book details:', error);
+                alert('Failed to load book details');
+                window.location.href = '/FrontEnd/your-books.html?tab=loaning';
+            }
+        }
+
+        async function returnBook() {
+            if (!confirm('Are you sure you want to return this book?')) {
+                return;
+            }
+
+            if (!currentBorrow || !currentBorrow.borrow_id) {
+                alert('Book information not found');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/borrows/${currentBorrow.borrow_id}/return`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to return book');
+                }
+
+                alert('Book returned successfully!');
+                window.location.href = `/FrontEnd/submit-review.html?book_id=${currentBorrow.book_id}&borrow_id=${currentBorrow.borrow_id}`;
+            } catch (error) {
+                console.error('Error returning book:', error);
+                alert('Failed to return book. Please try again.');
+            }
+        }
+
+        window.addEventListener('load', loadBookDetails);
+    </script>
+</body>
+</html>

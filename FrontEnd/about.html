@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tentang Kami - LibMatch</title>
+    <title>About - LibMatch</title>
     <link rel="stylesheet" href="/FrontEnd/css/style.css">
 </head>
 <body>
-    <header class="content-header">
-        <div class="header-content-wrapper">
-            <div class="logo">
-                <a href="/FrontEnd/dashboard-logged-in.html">LibMatch</a>
-            </div>
+    <header class="site-header">
+        <div class="header-top">
+            <a href="#" class="logo logo-link" id="logoLink">LibMatch</a>
             
-            <nav class="secondary-nav">
-                <a href="#" class="active">About</a> <a href="/FrontEnd/help.html">Help</a>
+            <nav class="main-nav header-nav">
+                <a href="/FrontEnd/about.html" class="active">About</a>
+                <a href="/FrontEnd/help.html">Help</a>
                 <a href="/FrontEnd/terms.html">Terms</a>
                 <a href="/FrontEnd/privacy.html">Privacy</a>
                 <a href="/FrontEnd/contact.html">Contact</a>
             </nav>
 
             <div class="right-actions">
-                <div class="initial-avatar">A</div> 
+                <!-- Replaced initial-avatar div with img tag for profile picture -->
+                <img id="userAvatar" class="profile-avatar-img" src="/FrontEnd/images/placeholder-profile.png" alt="Profile">
                 <span class="lang-text">EN</span>
             </div>
         </div>
@@ -29,53 +29,54 @@
 
     <main class="static-content-page">
         <div class="content-container">
-            <a href="/FrontEnd/dashboard.html" class="back-link">
-                <span class="arrow-icon">&lt;</span> Kembali
-            </a>
-
-            <div class="terms-of-use-content">
+            <div class="about-hero">
                 <h1 class="page-title">About Libmatch</h1>
-                <p class="last-updated">Diperbarui: 13 Januari 2025</p>
+                <p class="last-updated">Last Update October 21, 2025</p>
+            </div>
 
-                <section class="term-section">
+            <div class="about-content">
+                <p class="intro-text">
+                    Libmatch is a friendly, modern borrowing platform that connects readers with physical and digital books around them. Whether you like to pick up a paperback from a nearby branch or have a title delivered to your door, Libmatch makes borrowing simple, fast, and affordable.
+                </p>
+
+                <section class="about-section">
                     <h2>Our mission</h2>
-                    <p>To make reading accessible and delightful by helping people discover, borrow, and share books in their community—with convenience, transparency, and respect for creators.</p>
+                    <p>To make reading accessible and delightful by helping people discover, borrow, and share books in their community with convenience, transparency, and respect for creators.</p>
                 </section>
 
-                <section class="term-section">
+                <section class="about-section">
                     <h2>What we offer</h2>
-                    <ul>
+                    <ul class="about-list">
                         <li>Easy Borrowing: Search titles, reserve copies, and choose Pick-up or Delivery.</li>
-                        <li>Local branches & partners: Borrow from neighborhood libraries, independent bookstores, and community hubs.</li>
+                        <li>Local branches & partners: Borrow from neighborhood libraries, independent bookstores, and partner collections.</li>
                         <li>Flexible periods: Borrow for standard durations with optional extensions (subject to availability).</li>
-                        <li>User Community: Create community, view reviews and share reading notes.</li>
-                        <li>Secure: Secure payments and clear fee disclosures for deliveries and replacement charges.</li>
+                        <li>User community: Rate, review, and share reading notes.</li>
+                        <li>Safe transactions: Secure payments and clear fee breakdowns for deliveries and replacement charges.</li>
                     </ul>
                 </section>
 
-                <section class="term-section">
-                    <h2>Why people choose LibMatch</h2>
-                    <ul>
-                        <li>Convenient pickup spots and delivery options.</li>
-                        <li>We make returns easy and hassle-free.</li>
-                        <li>Respectful of readers and authors—we work with owners and rights-holders.</li>
+                <section class="about-section">
+                    <h2>Why people choose Libmatch</h2>
+                    <ul class="about-list">
+                        <li>Convenient pickup slots and delivery options.</li>
+                        <li>Transparent fees and clear borrowing rules.</li>
+                        <li>Respectful of books and authors—we work with owners and rights-holders.</li>
                         <li>Focused on local communities and discovery.</li>
                     </ul>
                 </section>
 
-                <section class="term-section">
+                <section class="about-section">
                     <h2>Our values</h2>
-                    <ul>
-                        <li>**Accessibility:** books should be easy to find and borrow.</li>
-                        <li>**Privacy:** respecting users' privacy and responsible handling of user data.</li>
-                        <li>**Community:** connecting readers with local collections and each other.</li>
-                        <li>**Sustainability:** promoting reuse of books over buying new when possible.</li>
+                    <ul class="about-list">
+                        <li>Accessibility: books should be easy to find and borrow.</li>
+                        <li>Trust: fair rules, transparent fees, and respectful handling of your data.</li>
+                        <li>Community: connecting readers with local collections and each other.</li>
+                        <li>Sustainability: promoting reuse of books over buying new where possible.</li>
                     </ul>
                 </section>
-                
-                <br><br>
-                <div class="libmatch-closing">
-                    <h2>Libmatch</h2>
+
+                <div class="about-footer-section">
+                    <div class="logo">LibMatch</div>
                     <p class="last-updated">Oct 21, 2025</p>
                 </div>
             </div>
@@ -83,17 +84,34 @@
     </main>
 
     <footer class="site-footer">
-        <nav class="footer-nav">
-            <a href="/FrontEnd/about.html">About</a> | 
-            <a href="/FrontEnd/help.html">Help</a> | 
-            <a href="/FrontEnd/terms.html">Terms</a> | 
-            <a href="/FrontEnd/privacy.html">Privacy</a> |
-            <a href="/FrontEnd/contact.html">Contact</a> 
-        </nav>
-        <p>&copy; 2025 LibMatch. Semua hak dilindungi.</p>
+        <div class="footer-content">
+            <nav class="footer-nav">
+                <a href="/FrontEnd/about.html">About</a> | 
+                <a href="/FrontEnd/help.html">Help</a> | 
+                <a href="/FrontEnd/terms.html">Terms</a> | 
+                <a href="/FrontEnd/privacy.html">Privacy</a> |
+                <a href="/FrontEnd/contact.html">Contact</a>
+            </nav>
+            
+            <p class="footer-copyright">&copy;2025 LibMatch</p>
+        </div>
     </footer>
 
     <script src="/FrontEnd/js/auth.js"></script>
     <script src="/FrontEnd/js/features.js"></script>
+    <!-- Added script to handle conditional logo redirect -->
+    <script>
+        document.getElementById('logoLink').addEventListener('click', function(e) {
+            e.preventDefault();
+            const user = localStorage.getItem('user');
+            if (user) {
+                // If logged in, redirect to dashboard-logged-in.html
+                window.location.href = '/FrontEnd/dashboard-logged-in.html';
+            } else {
+                // If not logged in, redirect to index.html
+                window.location.href = '/FrontEnd/index.html';
+            }
+        });
+    </script>
 </body>
 </html>

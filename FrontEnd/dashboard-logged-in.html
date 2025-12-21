@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - LibMatch</title>
     <link rel="stylesheet" href="/FrontEnd/css/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         main[data-feature]:not([data-feature="home"]) {
             display: none;
@@ -17,11 +18,16 @@
         <div class="header-top">
             <div class="logo">LibMatch</div>
             <div class="search-wrap header-search">
-                <input type="text" placeholder="Search by author, title, or name..." />
+                <!-- Added id and event listener for search functionality -->
+                <input type="text" id="searchInput" placeholder="Search by author, title, or name..." />
             </div>
             <div class="right-actions">
+                <a href="/FrontEnd/cart.html" class="cart-icon-link" style="margin-right: 15px;">
+                    <img src="/FrontEnd/images/cart.png" alt="Cart" style="width: 28px; height: 28px; cursor: pointer;">
+                </a>
                 <a href="/FrontEnd/profile.html" class="profile-avatar-link">
-                    <div class="initial-avatar">D</div> </a> 
+                    <img id="userAvatar" class="profile-avatar-img" src="/FrontEnd/images/placeholder-profile.png" alt="Profile">
+                </a> 
                 <button class="logout-btn" onclick="logout()" title="Logout">Logout</button>
                 <span class="lang-text">EN</span>
             </div>
@@ -29,10 +35,10 @@
 
         <nav class="main-nav header-nav">
             <a href="#" data-nav-link="home" class="active">Home</a>
-            <a href="#" data-nav-link="bestseller">Bestseller</a>
-            <a href="#" data-nav-link="kategori">Category</a>
-            <a href="#" data-nav-link="find-store">Borrower</a>
-            <a href="/FrontEnd/your-books.html">My Book</a>
+            <a href="/FrontEnd/top-seller.html">Bestseller</a>
+            <a href="/FrontEnd/select-categories.html">Category</a>
+            <a href="/FrontEnd/location.html">Locations</a>
+            <a href="/FrontEnd/your-books.html">My Books</a>
         </nav>
     </header>
 
@@ -43,7 +49,9 @@
             <div class="best-box">
                 <h2>Popular Book</h2>
                 <p>Find today's trending books</p>
-                <button class="enter-btn" onclick="showFeature('bestseller')">Check it now</button>
+                <button class="enter-btn" onclick="location.href='/FrontEnd/popular-book.html'">
+    Check it now
+                </button>
             </div>
         </section>
 
@@ -51,219 +59,31 @@
         <section class="book-section">
             <div class="category-header">
                 <h2>Popular now</h2>
-                <a href="#" onclick="showFeature('bestseller'); return false;" class="explore-btn">Explore All ></a>
+                <a href="/FrontEnd/popular-book.html" class="explore-btn">Explore All ></a>
             </div>
-            <div class="book-slider">
-                <div class="book-card">
-                    <img src="/FrontEnd/images/book-cover.png" alt="Pride and Prejudice">
-                    <p class="title">Pride and Prejudice</p>
-                    <p class="sub">Jane Austen</p>
-                </div>
-                <div class="book-card">
-                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
-                    <p class="title">The Great Gatsby</p>
-                    <p class="sub">F. Scott Fitzgerald</p>
-                </div>
-                <div class="book-card">
-                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
-                    <p class="title">To Kill a Mockingbird</p>
-                    <p class="sub">Harper Lee</p>
-                </div>
-                <div class="book-card">
-                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
-                    <p class="title">1984</p>
-                    <p class="sub">George Orwell</p>
-                </div>
-                <div class="book-card">
-                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
-                    <p class="title">Jane Eyre</p>
-                    <p class="sub">Charlotte Brontë</p>
-                </div>
-                <div class="book-card">
-                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
-                    <p class="title">Jane Eyre</p>
-                    <p class="sub">Charlotte Brontë</p>
-                </div>
-                <div class="book-card">
-                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
-                    <p class="title">Jane Eyre</p>
-                    <p class="sub">Charlotte Brontë</p>
-                </div>
+            <div class="book-slider" id="popular-books-slider">
+                <!-- Books will be loaded dynamically -->
             </div>
         </section>
+
+        <section class="book-section">
+            <div class="category-header">
+                <h2>Top Seller</h2>
+                <a href="/FrontEnd/top-seller.html" class="explore-btn">Explore All ></a>
+            </div>
+            <div class="book-slider" id="top-borrowed-slider">
+                <!-- Books will be loaded dynamically -->
+            </div>
+        </section>
+
+        <!-- NEW ARRIVALS SECTION -->
         <section class="book-section">
             <div class="category-header">
                 <h2>New Arrivals</h2>
-                <a href="#" onclick="showFeature('bestseller'); return false;" class="explore-btn">Explore All ></a>
+                <a href="/FrontEnd/all-new-arrivals.html" class="explore-btn">Explore All ></a>
             </div>
-            <div class="book-slider">
-                <div class="book-card">
-                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
-                    <p class="title">The Midnight Library</p>
-                    <p class="sub">Matt Haig</p>
-                </div>
-                <div class="book-card">
-                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
-                    <p class="title">Atomic Habits</p>
-                    <p class="sub">James Clear</p>
-                </div>
-                <div class="book-card">
-                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
-                    <p class="title">Educated</p>
-                    <p class="sub">Tara Westover</p>
-                </div>
-                <div class="book-card">
-                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
-                    <p class="title">Sapiens</p>
-                    <p class="sub">Yuval Noah Harari</p>
-                </div>
-                <div class="book-card">
-                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
-                    <p class="title">Thinking, Fast and Slow</p>
-                    <p class="sub">Daniel Kahneman</p>
-                </div>
-                <div class="book-card">
-                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
-                    <p class="title">Jane Eyre</p>
-                    <p class="sub">Charlotte Brontë</p>
-                </div>
-                <div class="book-card">
-                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
-                    <p class="title">Jane Eyre</p>
-                    <p class="sub">Charlotte Brontë</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="book-section">
-            <div class="category-header">
-                <h2>Top Borrowed</h2>
-                <a href="#" onclick="showFeature('bestseller'); return false;" class="explore-btn">Explore All ></a>
-            </div>
-            <div class="book-slider">
-                <div class="book-card">
-                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
-                    <p class="title">The Hobbit</p>
-                    <p class="sub">J.R.R. Tolkien</p>
-                </div>
-                <div class="book-card">
-                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
-                    <p class="title">Harry Potter</p>
-                    <p class="sub">J.K. Rowling</p>
-                </div>
-                <div class="book-card">
-                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
-                    <p class="title">The Lord of the Rings</p>
-                    <p class="sub">J.R.R. Tolkien</p>
-                </div>
-                <div class="book-card">
-                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
-                    <p class="title">Dune</p>
-                    <p class="sub">Frank Herbert</p>
-                </div>
-                <div class="book-card">
-                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
-                    <p class="title">The Name of the Wind</p>
-                    <p class="sub">Patrick Rothfuss</p>
-                </div>
-                <div class="book-card">
-                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
-                    <p class="title">Jane Eyre</p>
-                    <p class="sub">Charlotte Brontë</p>
-                </div>
-                <div class="book-card">
-                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
-                    <p class="title">Jane Eyre</p>
-                    <p class="sub">Charlotte Brontë</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="book-section">
-            <div class="category-header">
-                <h2>Tranding Genres</h2>
-                <a href="#" onclick="showFeature('bestseller'); return false;" class="explore-btn">Explore All ></a>
-            </div>
-            <div class="book-slider">
-                <div class="book-card">
-                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
-                    <p class="title">The Hobbit</p>
-                    <p class="sub">J.R.R. Tolkien</p>
-                </div>
-                <div class="book-card">
-                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
-                    <p class="title">Harry Potter</p>
-                    <p class="sub">J.K. Rowling</p>
-                </div>
-                <div class="book-card">
-                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
-                    <p class="title">The Lord of the Rings</p>
-                    <p class="sub">J.R.R. Tolkien</p>
-                </div>
-                <div class="book-card">
-                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
-                    <p class="title">Dune</p>
-                    <p class="sub">Frank Herbert</p>
-                </div>
-                <div class="book-card">
-                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
-                    <p class="title">The Name of the Wind</p>
-                    <p class="sub">Patrick Rothfuss</p>
-                </div>
-                <div class="book-card">
-                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
-                    <p class="title">Jane Eyre</p>
-                    <p class="sub">Charlotte Brontë</p>
-                </div>
-                <div class="book-card">
-                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
-                    <p class="title">Jane Eyre</p>
-                    <p class="sub">Charlotte Brontë</p>
-                </div>
-            </div>
-        </section>
-
-        <section class="book-section">
-            <div class="category-header">
-                <h2>Staff Picks</h2>
-                <a href="#" onclick="showFeature('bestseller'); return false;" class="explore-btn">Explore All ></a>
-            </div>
-            <div class="book-slider">
-                <div class="book-card">
-                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
-                    <p class="title">The Hobbit</p>
-                    <p class="sub">J.R.R. Tolkien</p>
-                </div>
-                <div class="book-card">
-                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
-                    <p class="title">Harry Potter</p>
-                    <p class="sub">J.K. Rowling</p>
-                </div>
-                <div class="book-card">
-                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
-                    <p class="title">The Lord of the Rings</p>
-                    <p class="sub">J.R.R. Tolkien</p>
-                </div>
-                <div class="book-card">
-                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
-                    <p class="title">Dune</p>
-                    <p class="sub">Frank Herbert</p>
-                </div>
-                <div class="book-card">
-                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
-                    <p class="title">The Name of the Wind</p>
-                    <p class="sub">Patrick Rothfuss</p>
-                </div>
-                <div class="book-card">
-                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
-                    <p class="title">Jane Eyre</p>
-                    <p class="sub">Charlotte Brontë</p>
-                </div>
-                <div class="book-card">
-                    <img src="/FrontEnd/images/book-cover.png" alt="Book">
-                    <p class="title">Jane Eyre</p>
-                    <p class="sub">Charlotte Brontë</p>
-                </div>
+            <div class="book-slider" id="new-arrivals-slider">
+                <!-- Books will be loaded dynamically -->
             </div>
         </section>
 
@@ -354,57 +174,10 @@
     <main data-feature="kategori" style="display: none;">
         <section class="kategori-section">
             <div class="category-header">
-                <h3>Kategori Buku</h3>
+                <h3>Categories</h3>
             </div>
-            <div class="kategori-grid">
-                <div class="kategori-card">
-                    <div class="kategori-icon">💕</div>
-                    <p class="kategori-title">Romance</p>
-                </div>
-                <div class="kategori-card">
-                    <div class="kategori-icon">✨</div>
-                    <p class="kategori-title">Fantasy</p>
-                </div>
-                <div class="kategori-card">
-                    <div class="kategori-icon">😱</div>
-                    <p class="kategori-title">Horror</p>
-                </div>
-                <div class="kategori-card">
-                    <div class="kategori-icon">🎭</div>
-                    <p class="kategori-title">Drama</p>
-                </div>
-                <div class="kategori-card">
-                    <div class="kategori-icon">🚀</div>
-                    <p class="kategori-title">Sci-Fi</p>
-                </div>
-                <div class="kategori-card">
-                    <div class="kategori-icon">🔍</div>
-                    <p class="kategori-title">Thriller</p>
-                </div>
-                <div class="kategori-card">
-                    <div class="kategori-icon">🕵️</div>
-                    <p class="kategori-title">Mystery</p>
-                </div>
-                <div class="kategori-card">
-                    <div class="kategori-icon">📖</div>
-                    <p class="kategori-title">Biography</p>
-                </div>
-                <div class="kategori-card">
-                    <div class="kategori-icon">📚</div>
-                    <p class="kategori-title">History</p>
-                </div>
-                <div class="kategori-card">
-                    <div class="kategori-icon">💡</div>
-                    <p class="kategori-title">Self-Help</p>
-                </div>
-                <div class="kategori-card">
-                    <div class="kategori-icon">👶</div>
-                    <p class="kategori-title">Children's Book</p>
-                </div>
-                <div class="kategori-card">
-                    <div class="kategori-icon">✍️</div>
-                    <p class="kategori-title">Memoir</p>
-                </div>
+            <div id="categoryList" class="kategori-grid">
+                <!-- Dynamic category cards loaded via JavaScript -->
             </div>
         </section>
     </main>
@@ -417,57 +190,399 @@
             <a href="/FrontEnd/privacy.html">Privacy</a> |
             <a href="/FrontEnd/contact.html">Contact</a> 
         </nav>
-        <p>&copy; 2025 LibMatch. Semua hak dilindungi.</p>
+        <p>&copy; 2025 LibMatch. All rights reserved.</p>
     </footer>
-
+    
     <!-- FIND STORE FEATURE -->
     <main data-feature="find-store" style="display: none;">
         <section class="find-store-section">
             <div class="find-store-container">
                 <div class="find-store-map">
-                    <div class="map-placeholder">
-                        <p>Peta Toko Terdekat</p>
-                    </div>
+                    <div id="map" style="width: 100%; height: 100%;"></div>
                 </div>
                 <div class="find-store-list">
-                    <h3>Toko Terdekat</h3>
-                    <p class="location-text">Lokasi Anda</p>
-                    <div class="store-card">
-                        <h4>LibMatch Store - Pusat</h4>
-                        <p>Jl. Merdeka No. 123, Jakarta Pusat</p>
-                        <p class="distance">2.5 km dari lokasi Anda</p>
-                        <p class="hours">Buka: 09:00 - 21:00</p>
-                    </div>
-                    <div class="store-card">
-                        <h4>LibMatch Store - Selatan</h4>
-                        <p>Jl. Sudirman No. 456, Jakarta Selatan</p>
-                        <p class="distance">5.2 km dari lokasi Anda</p>
-                        <p class="hours">Buka: 10:00 - 22:00</p>
-                    </div>
-                    <div class="store-card">
-                        <h4>LibMatch Store - Barat</h4>
-                        <p>Jl. Gatot Subroto No. 789, Jakarta Barat</p>
-                        <p class="distance">7.8 km dari lokasi Anda</p>
-                        <p class="hours">Buka: 09:00 - 21:00</p>
+                    <h3>Book Locations</h3>
+                    <p class="location-text" id="userLocationText">Finding your location...</p>
+                    <div id="locationsContainer">
+                        <!-- Dynamic location cards loaded via JavaScript -->
                     </div>
                 </div>
             </div>
         </section>
     </main>
-
+    
     <script src="/FrontEnd/js/auth.js"></script>
     <script src="/FrontEnd/js/features.js"></script>
+    <!-- Added cache-busting query parameter to force reload -->
+    <script src="/FrontEnd/js/dashboard.js?v=3"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const user = getCurrentUser()
-            if (!user) {
-                window.location.href = "/FrontEnd/login.html"
-            } else {
-                if (user.profile_image) {
-                    document.getElementById("profileImageDisplay").src = user.profile_image
-                }
+        let allBooks = [];
+        
+        async function loadBooks() {
+            try {
+                const response = await fetch(`${API_URL}/books`);
+                if (!response.ok) throw new Error('Failed to fetch books');
+                allBooks = await response.json();
+                displayBooks(allBooks);
+            } catch (error) {
+                console.error('Error loading books:', error);
             }
-        })
+        }
+        
+        async function loadCategories() {
+            try {
+                const response = await fetch(`${API_URL}/categories`);
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch categories: ${response.status}`);
+                }
+                const categories = await response.json();
+                const categoryList = document.getElementById('categoryList');
+                if (!categoryList) {
+                    console.error('Category list element not found');
+                    return;
+                }
+                categoryList.innerHTML = '';
+                const categoryIcons = {
+                    'Romance': '💕',
+                    'Fantasy': '✨',
+                    'Horror': '😱',
+                    'Drama': '🎭',
+                    'Sci-Fi': '🚀',
+                    'Thriller': '🔍',
+                    'Mystery': '🕵️',
+                    'Biography': '📖',
+                    'History': '📚',
+                    'Self-Help': '💡',
+                    'Children\'s Book': '👶',
+                    'Memoir': '✍️'
+                };
+                categories.forEach(category => {
+                    const card = document.createElement('div');
+                    card.className = 'kategori-card';
+                    card.style.cursor = 'pointer';
+                    const icon = document.createElement('div');
+                    icon.className = 'kategori-icon';
+                    icon.textContent = categoryIcons[category.category_name] || '📚';
+                    const title = document.createElement('p');
+                    title.className = 'kategori-title';
+                    title.textContent = category.category_name;
+                    card.appendChild(icon);
+                    card.appendChild(title);
+                    card.addEventListener('click', () => {
+                        showCategoryBooks(category.category_id, category.category_name);
+                    });
+                    categoryList.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Error loading categories:', error);
+            }
+        }
+        
+        function displayBooks(books) {
+            // This function is for the books feature - implement as needed
+            console.log('Books loaded:', books.length);
+        }
+        
+        window.addEventListener('load', async function() {
+            await checkAuth();
+            loadUserProfileImage();
+            loadNewArrivals();
+            loadPopularBooks();
+            loadTopBorrowedBooks();
+            loadCategories();
+            
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        const query = searchInput.value.trim();
+                        if (query) {
+                            window.location.href = `/FrontEnd/search-results.html?q=${encodeURIComponent(query)}`;
+                        }
+                    }
+                });
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            await checkAuth();
+            await loadCategories();
+            await loadPopularBooks();
+            await loadTopBorrowedBooks();
+        });
+
+        async function loadNewArrivals() {
+            try {
+                const response = await fetch(`${API_URL}/books/new-arrivals`);
+                if (!response.ok) throw new Error('Failed to fetch new arrivals');
+                
+                const books = await response.json();
+                const slider = document.getElementById('new-arrivals-slider');
+                
+                if (!slider) return;
+                
+                slider.innerHTML = '';
+                
+                if (books.length === 0) {
+                    slider.innerHTML = '<p style="padding: 20px; text-align: center; color: #999;">No new arrivals yet.</p>';
+                    return;
+                }
+                
+                books.slice(0, 10).forEach(book => {
+                    const bookCard = document.createElement('div');
+                    bookCard.className = 'book-card';
+                    bookCard.style.cursor = 'pointer';
+                    
+                    const coverImage = book.cover_image || '/FrontEnd/images/book-cover.png';
+                    
+                    bookCard.innerHTML = `
+                        <img src="${coverImage}" alt="${book.title}" onerror="this.src='/FrontEnd/images/book-cover.png'">
+                        <p class="title">${book.title}</p>
+                        <p class="sub">${book.author}</p>
+                    `;
+                    
+                    bookCard.addEventListener('click', async () => {
+                        await trackBookView(book.book_id);
+                        window.location.href = `/FrontEnd/public-book-detail.html?id=${book.book_id}`;
+                    });
+                    
+                    slider.appendChild(bookCard);
+                });
+            } catch (error) {
+                console.error('Error loading new arrivals:', error);
+            }
+        }
+
+        async function loadPopularBooks() {
+            try {
+                const response = await fetch(`${API_URL}/books/popular`);
+                if (!response.ok) throw new Error('Failed to fetch popular books');
+                
+                const books = await response.json();
+                const slider = document.getElementById('popular-books-slider');
+                
+                if (!slider) return;
+                
+                slider.innerHTML = '';
+                
+                books.forEach(book => {
+                    const bookCard = document.createElement('div');
+                    bookCard.className = 'book-card';
+                    bookCard.style.cursor = 'pointer';
+                    bookCard.innerHTML = `
+                        <img src="${book.cover_image || '/FrontEnd/images/book-cover.png'}" alt="${book.title}">
+                        <p class="title">${book.title}</p>
+                        <p class="sub">${book.author}</p>
+                    `;
+                    bookCard.addEventListener('click', async () => {
+                        await trackBookView(book.book_id);
+                        window.location.href = `/FrontEnd/public-book-detail.html?id=${book.book_id}`;
+                    });
+                    slider.appendChild(bookCard);
+                });
+            } catch (error) {
+                console.error('Error loading popular books:', error);
+            }
+        }
+
+        async function loadTopBorrowedBooks() {
+            try {
+                const response = await fetch(`${API_URL}/books/top-borrowed`);
+                if (!response.ok) throw new Error('Failed to fetch top borrowed books');
+                
+                const books = await response.json();
+                const slider = document.getElementById('top-borrowed-slider');
+                
+                if (!slider) return;
+                
+                slider.innerHTML = '';
+                
+                books.forEach(book => {
+                    const bookCard = document.createElement('div');
+                    bookCard.className = 'book-card';
+                    bookCard.style.cursor = 'pointer';
+                    bookCard.innerHTML = `
+                        <img src="${book.cover_image || '/FrontEnd/images/book-cover.png'}" alt="${book.title}">
+                        <p class="title">${book.title}</p>
+                        <p class="sub">${book.author}</p>
+                    `;
+                    bookCard.addEventListener('click', async () => {
+                        await trackBookView(book.book_id);
+                        window.location.href = `/FrontEnd/public-book-detail.html?id=${book.book_id}`;
+                    });
+                    slider.appendChild(bookCard);
+                });
+            } catch (error) {
+                console.error('Error loading top borrowed books:', error);
+            }
+        }
+
+        function showCategoryBooks(categoryId, categoryName) {
+            window.location.href = `/FrontEnd/category-books.html?id=${categoryId}&name=${encodeURIComponent(categoryName)}`;
+        }
+
+        let map = null;
+        let userMarker = null;
+        let userLocation = { lat: -6.9175, lng: 107.6191 }; // Default to Bandung
+
+        function initMap() {
+            if (map) return; // Already initialized
+            
+            // Initialize Leaflet map
+            map = L.map('map').setView([userLocation.lat, userLocation.lng], 13);
+            
+            // Add OpenStreetMap tiles
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+            
+            // Add user location marker
+            userMarker = L.marker([userLocation.lat, userLocation.lng], {
+                icon: L.icon({
+                    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
+                    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+                    iconSize: [25, 41],
+                    iconAnchor: [12, 41],
+                    popupAnchor: [1, -34],
+                    shadowSize: [41, 41]
+                })
+            }).addTo(map).bindPopup('Your Location').openPopup();
+            
+            // Get user's actual location
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        userLocation = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+                        map.setView([userLocation.lat, userLocation.lng], 13);
+                        userMarker.setLatLng([userLocation.lat, userLocation.lng]);
+                        document.getElementById('userLocationText').textContent = 
+                            `Your Location: ${userLocation.lat.toFixed(4)}, ${userLocation.lng.toFixed(4)}`;
+                        loadLocations();
+                    },
+                    (error) => {
+                        console.error('Error getting location:', error);
+                        document.getElementById('userLocationText').textContent = 
+                            'Using default location (Bandung)';
+                        loadLocations();
+                    }
+                );
+            } else {
+                document.getElementById('userLocationText').textContent = 
+                    'Geolocation not supported. Using default location (Bandung)';
+                loadLocations();
+            }
+        }
+        
+        function loadLocations() {
+            const locations = [
+                {
+                    name: 'LibMatch Transmart Buahbatu',
+                    lat: -6.9667222,
+                    lng: 107.6393889,
+                    address: 'Jl. Soekarno Hatta No.713, Sekejati, Kec. Buahbatu, Bandung'
+                },
+                {
+                    name: 'LibMatch Kebon Jati',
+                    lat: -6.9160556,
+                    lng: 107.5951944,
+                    address: 'Jl. Kebon Jati, Bandung Wetan, Kec. Bandung Wetan, Bandung'
+                },
+                {
+                    name: 'LibMatch Cihampelas',
+                    lat: -6.8921389,
+                    lng: 107.6041944,
+                    address: 'Jl. Cihampelas, Tamansari, Kec. Bandung Wetan, Bandung'
+                }
+            ];
+            
+            displayLocations(locations);
+        }
+        
+        function displayLocations(locations) {
+            const container = document.getElementById('locationsContainer');
+            container.innerHTML = '';
+            
+            locations.forEach(location => {
+                // Add marker to map
+                const marker = L.marker([location.lat, location.lng], {
+                    icon: L.icon({
+                        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+                        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/images/marker-shadow.png',
+                        iconSize: [25, 41],
+                        iconAnchor: [12, 41],
+                        popupAnchor: [1, -34],
+                        shadowSize: [41, 41]
+                    })
+                }).addTo(map);
+                
+                // Calculate distance from user
+                const distance = calculateDistance(
+                    userLocation.lat, userLocation.lng, location.lat, location.lng
+                ).toFixed(1);
+                
+                marker.bindPopup(`
+                    <strong>${location.name}</strong><br>
+                    ${location.address}<br>
+                    <small>${distance} km from you</small>
+                `);
+                
+                // Create location card
+                const card = document.createElement('div');
+                card.className = 'store-card';
+                card.style.cursor = 'pointer';
+                card.innerHTML = `
+                    <h4>${location.name}</h4>
+                    <p>${location.address}</p>
+                    <p class="distance">${distance} km from your location</p>
+                `;
+                
+                // Click card to center map on location
+                card.addEventListener('click', () => {
+                    map.setView([location.lat, location.lng], 15);
+                    marker.openPopup();
+                });
+                
+                container.appendChild(card);
+            });
+        }
+        
+        // Calculate distance between two coordinates (Haversine formula)
+        function calculateDistance(lat1, lon1, lat2, lon2) {
+            const R = 6371; // Earth's radius in km
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLon = (lon2 - lon1) * Math.PI / 180;
+            const a = 
+                Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLon/2) * Math.sin(dLon/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+        
+        const originalShowFeature = window.showFeature;
+        window.showFeature = function(featureName) {
+            originalShowFeature(featureName);
+            if (featureName === 'find-store') {
+                setTimeout(() => {
+                    initMap();
+                }, 100); // Small delay to ensure map div is visible
+            }
+        };
+
+
+        async function trackBookView(bookId) {
+            console.log('[v0] Tracking view for book ID:', bookId);
+            try {
+                const response = await fetch(`${API_URL}/books/${bookId}/view`, { method: 'POST' });
+                console.log('[v0] View tracked successfully:', response.status);
+            } catch (error) {
+                console.error('[v0] Error tracking view:', error);
+            }
+        }
     </script>
 </body>
 </html>

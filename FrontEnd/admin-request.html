@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Pending Books - LibMatch</title>
+    <link rel="stylesheet" href="/FrontEnd/css/style.css">
+    <style>
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            padding: 40px;
+            background: white;
+        }
+
+        .book-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .book-cover {
+            width: 150px;
+            height: 200px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .book-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .book-title {
+            font-weight: 600;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .book-author {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 10px;
+        }
+
+        .book-uploader {
+            font-size: 11px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .book-status {
+            font-size: 11px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-icon {
+            width: 16px;
+            height: 16px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-approve {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-approve:hover {
+            background: #218838;
+        }
+
+        .btn-reject {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-reject:hover {
+            background: #c82333;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 40px;
+            color: #999;
+            font-size: 16px;
+            grid-column: 1/-1;
+        }
+
+        @media (max-width: 1200px) {
+            .books-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .books-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="header-top">
+            <div class="logo">LibMatch</div>
+            <div class="right-actions">
+                <a href="/FrontEnd/profile.html" class="profile-avatar-link">
+                    <!-- Replaced initial-avatar div with img tag for profile picture -->
+                    <img id="userAvatar" class="profile-avatar-img" src="/FrontEnd/images/placeholder-profile.png" alt="Profile">
+                </a>
+                <button class="logout-btn" onclick="logout()" title="Logout">Logout</button>
+                <span class="lang-text">EN</span>
+            </div>
+        </div>
+
+        <nav class="main-nav header-nav">
+            <a href="/FrontEnd/admin-all-books.html">All Books</a>
+            <a href="/FrontEnd/admin-request.html" class="active">Pending Requests</a>
+            <a href="/FrontEnd/upload-admin.html">Upload Book</a>
+        </nav>
+    </header>
+
+    <main class="main-content" style="background: white; min-height: 80vh;">
+        <div class="search-wrap header-search">
+            <input type="text" id="searchInput" placeholder="Search by title, author, or uploader..." />
+        </div>
+        <div style="padding: 40px;">
+            <h1 style="margin-bottom: 30px; font-size: 28px; color: #333;">Pending Book Requests</h1>
+            <div class="books-grid" id="booksContainer">
+                <p class="empty-state">Loading pending books...</p>
+            </div>
+        </div>
+    </main>
+
+    <script src="/FrontEnd/js/auth.js"></script>
+    <script>
+        function initPage() {
+            const user = getCurrentUser()
+            if (!user || !user.user_id) {
+                window.location.href = "/FrontEnd/login.html"
+                return
+            }
+
+            // Check if user is admin
+            if (user.role !== 'admin') {
+                alert('Access denied. Admin only.')
+                window.location.href = "/FrontEnd/dashboard-logged-in.html"
+                return
+            }
+
+            // Set user avatar
+            const avatar = document.getElementById("userAvatar")
+            if (avatar && user.name) {
+                avatar.alt = user.name.charAt(0).toUpperCase()
+            }
+
+            // Load pending books
+            loadPendingBooks()
+
+            // Setup search
+            document.getElementById('searchInput').addEventListener('input', handleSearch)
+        }
+
+        let allBooks = []
+
+        async function loadPendingBooks() {
+            try {
+                const response = await fetch('/api/books/pending')
+                
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch pending books: ${response.status}`)
+                }
+
+                allBooks = await response.json()
+                displayBooks(allBooks)
+            } catch (error) {
+                console.error('Error loading pending books:', error)
+                const container = document.getElementById("booksContainer")
+                container.innerHTML = '<div class="empty-state">Error loading pending books. Please try again.</div>'
+            }
+        }
+
+        function displayBooks(books) {
+            const container = document.getElementById("booksContainer")
+
+            if (!books || books.length === 0) {
+                container.innerHTML = '<div class="empty-state">No pending book requests at the moment.</div>'
+                return
+            }
+
+            container.innerHTML = ""
+
+            books.forEach(book => {
+                const bookCard = document.createElement("div")
+                bookCard.className = "book-item"
+                bookCard.innerHTML = `
+                    <div class="book-cover">
+                        <img src="${book.cover_image || '/FrontEnd/images/book-cover.png'}" 
+                             alt="${book.title}" 
+                             onerror="this.src='/FrontEnd/images/placeholder-Image.png'">
+                    </div>
+                    <div class="book-title">${book.title}</div>
+                    <div class="book-author">${book.author}</div>
+                    <div class="book-uploader">Uploaded by: ${book.uploader_name || 'Unknown'}</div>
+                    <div class="book-status">
+                        <img src="/FrontEnd/images/Pending.png" class="status-icon" alt="Pending">
+                        Pending
+                    </div>
+                    <div class="action-buttons">
+                        <button class="btn-small btn-approve" onclick="acceptBook(${book.book_id})">Accept</button>
+                        <button class="btn-small btn-reject" onclick="rejectBook(${book.book_id})">Reject</button>
+                    </div>
+                `
+                container.appendChild(bookCard)
+            })
+        }
+
+        async function acceptBook(bookId) {
+            if (!confirm('Are you sure you want to accept this book?')) {
+                return
+            }
+
+            try {
+                const response = await fetch(`/api/books/${bookId}/status`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ status: 'accepted' })
+                })
+
+                const result = await response.json()
+
+                if (result.success) {
+                    alert('Book accepted successfully!')
+                    loadPendingBooks() // Reload the list
+                } else {
+                    alert('Failed to accept book: ' + (result.error || 'Unknown error'))
+                }
+            } catch (error) {
+                console.error('Error accepting book:', error)
+                alert('Error accepting book. Please try again.')
+            }
+        }
+
+        async function rejectBook(bookId) {
+            if (!confirm('Are you sure you want to reject this book?')) {
+                return
+            }
+
+            try {
+                const response = await fetch(`/api/books/${bookId}/status`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ status: 'rejected' })
+                })
+
+                const result = await response.json()
+
+                if (result.success) {
+                    alert('Book rejected successfully.')
+                    loadPendingBooks() // Reload the list
+                } else {
+                    alert('Failed to reject book: ' + (result.error || 'Unknown error'))
+                }
+            } catch (error) {
+                console.error('Error rejecting book:', error)
+                alert('Error rejecting book. Please try again.')
+            }
+        }
+
+        function handleSearch(e) {
+            const query = e.target.value.toLowerCase()
+            
+            if (!query) {
+                displayBooks(allBooks)
+                return
+            }
+
+            const filtered = allBooks.filter(book => 
+                book.title.toLowerCase().includes(query) ||
+                book.author.toLowerCase().includes(query) ||
+                (book.uploader_name && book.uploader_name.toLowerCase().includes(query))
+            )
+
+            displayBooks(filtered)
+        }
+
+        window.addEventListener("load", initPage)
+    </script>
+</body>
+</html>
