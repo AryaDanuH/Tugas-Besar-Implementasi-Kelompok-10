@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categories - LibMatch</title>
+    <link rel="stylesheet" href="/FrontEnd/css/style.css">
+    <link rel="stylesheet" href="/FrontEnd/css/kategori.css">
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="header-top">
+            <div class="logo">LibMatch</div>
+            <div class="search-wrap header-search">
+                <input type="text" id="searchInput" placeholder="Search by author, title, or name..." />
+            </div>
+            <div class="right-actions">
+                <a href="/FrontEnd/cart.html" class="cart-icon-link" id="cartLink" style="margin-right: 15px; display: none;">
+                    <img src="/FrontEnd/images/cart.png" alt="Cart" style="width: 28px; height: 28px; cursor: pointer;">
+                </a>
+                <a href="/FrontEnd/profile.html" class="profile-avatar-link" id="profileLink" style="display: none;">
+                    <img id="userAvatar" class="profile-avatar-img" src="/FrontEnd/images/placeholder-profile.png" alt="Profile">
+                </a>
+                <button class="logout-btn" id="logoutBtn" onclick="logout()" title="Logout" style="display: none;">Logout</button>
+                <button class="login-btn" id="loginBtn" onclick="window.location.href='/FrontEnd/login.html'" style="display: none;">Login</button>
+                <span class="lang-text">EN</span>
+            </div>
+        </div>
+
+        <!-- Updated navigation links to point to dedicated pages -->
+        <nav class="main-nav header-nav">
+            <a href="#" id="homeLink">Home</a>
+            <a href="/FrontEnd/top-seller.html">Bestseller</a>
+            <a href="/FrontEnd/select-categories.html" class="active">Category</a>
+            <a href="/FrontEnd/location.html">Locations</a>
+            <a href="/FrontEnd/your-books.html" id="myBooksLink" style="display: none;">My Books</a>
+        </nav>
+    </header>
+
+    <!-- CATEGORIES SECTION -->
+    <main>
+        <section class="kategori-section">
+            <div class="category-header">
+                <h3>Categories</h3>
+            </div>
+            <div id="categoryList" class="kategori-grid">
+                <!-- Dynamic categories loaded via JavaScript -->
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <nav class="footer-nav">
+            <a href="/FrontEnd/about.html">About</a> | 
+            <a href="/FrontEnd/help.html">Help</a> | 
+            <a href="/FrontEnd/terms.html">Terms</a> | 
+            <a href="/FrontEnd/privacy.html">Privacy</a> |
+            <a href="/FrontEnd/contact.html">Contact</a> 
+        </nav>
+        <p>&copy; 2025 LibMatch. All rights reserved.</p>
+    </footer>
+
+    <script src="/FrontEnd/js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuthAndUpdateUI();
+            loadCategories();
+            setupSearch();
+        });
+
+        function checkAuthAndUpdateUI() {
+            const user = getCurrentUser();
+            if (user) {
+                document.getElementById('logoutBtn').style.display = 'block';
+                document.getElementById('profileLink').style.display = 'block';
+                document.getElementById('cartLink').style.display = 'block';
+                document.getElementById('myBooksLink').style.display = 'block';
+                document.getElementById('loginBtn').style.display = 'none';
+                document.getElementById('homeLink').href = '/FrontEnd/dashboard-logged-in.html';
+            } else {
+                document.getElementById('logoutBtn').style.display = 'none';
+                document.getElementById('profileLink').style.display = 'none';
+                document.getElementById('cartLink').style.display = 'none';
+                document.getElementById('myBooksLink').style.display = 'none';
+                document.getElementById('loginBtn').style.display = 'block';
+                document.getElementById('homeLink').href = '/FrontEnd/index.html';
+            }
+        }
+
+        async function loadCategories() {
+            try {
+                const response = await fetch(`${API_URL}/categories`);
+                if (!response.ok) throw new Error('Failed to fetch categories');
+                
+                const categories = await response.json();
+                const categoryList = document.getElementById('categoryList');
+                
+                const categoryIcons = {
+                    'Romance': '💕',
+                    'Fantasy': '✨',
+                    'Horror': '😱',
+                    'Drama': '🎭',
+                    'Sci-Fi': '🚀',
+                    'Thriller': '🔍',
+                    'Mystery': '🕵️',
+                    'Biography': '📖',
+                    'History': '📚',
+                    'Self-Help': '💡',
+                    'Children\'s Book': '👶',
+                    'Memoir': '✍️'
+                };
+                
+                categoryList.innerHTML = '';
+                categories.forEach(category => {
+                    const card = document.createElement('div');
+                    card.className = 'category-card';
+                    card.style.cursor = 'pointer';
+                    
+                    const icon = document.createElement('div');
+                    icon.className = 'category-icon';
+                    icon.textContent = categoryIcons[category.category_name] || '📚';
+                    
+                    const title = document.createElement('h4');
+                    title.textContent = category.category_name;
+                    
+                    const link = document.createElement('a');
+                    link.href = `/FrontEnd/category-books.html?id=${category.category_id}&name=${encodeURIComponent(category.category_name)}`;
+                    link.className = 'category-link';
+                    link.textContent = 'Browse Books →';
+                    
+                    card.appendChild(icon);
+                    card.appendChild(title);
+                    card.appendChild(link);
+                    
+                    card.onclick = function(e) {
+                        e.preventDefault();
+                        window.location.href = `/FrontEnd/category-books.html?id=${category.category_id}&name=${encodeURIComponent(category.category_name)}`;
+                    };
+                    
+                    categoryList.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Error loading categories:', error);
+                document.getElementById('categoryList').innerHTML = '<p>Error loading categories. Please try again later.</p>';
+            }
+        }
+
+        function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase();
+                const categoryCards = document.querySelectorAll('.category-card');
+                
+                categoryCards.forEach(card => {
+                    const text = card.textContent.toLowerCase();
+                    card.style.display = text.includes(query) ? 'block' : 'none';
+                });
+            });
+        }
+    </script>
+</body>
+</html>

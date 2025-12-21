@@ -3,90 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profil - LibMatch</title>
+    <title>Profile - LibMatch</title>
     <link rel="stylesheet" href="/FrontEnd/css/style.css">
 </head>
 <body>
-    <!-- HEADER -->
+    <!-- Updated header to match dashboard-logged-in.html structure -->
     <header class="site-header">
         <div class="header-top">
-            <div class="logo">📚 LibMatch</div>
+            <div class="logo">LibMatch</div>
+            <div class="search-wrap header-search">
+                <input type="text" placeholder="Search by author, title, or name..." />
+            </div>
             <div class="right-actions">
-                <div class="user-profile">
-                    <span id="userName" class="user-name">User</span>
-                    <a href="/FrontEnd/profile.html" class="profile-link">Profil</a>
-                    <button class="logout-btn" onclick="logout()">Logout</button>
-                </div>
-                <span class="lang-text">ID</span>
+                <!-- Added cart icon to profile page header -->
+                <a href="/FrontEnd/cart.html" class="cart-icon-link" style="margin-right: 15px;">
+                    <img src="/FrontEnd/images/cart.png" alt="Cart" style="width: 28px; height: 28px; cursor: pointer;">
+                </a>
+                <a href="/FrontEnd/profile.html" class="profile-avatar-link">
+                    <!-- Replaced initial-avatar div with img tag for profile picture -->
+                    <img id="userAvatar" class="profile-avatar-img" src="/FrontEnd/images/placeholder-profile.png" alt="Profile">
+                </a> 
+                <button class="logout-btn" onclick="logout()" title="Logout">Logout</button>
+                <span class="lang-text">EN</span>
             </div>
         </div>
 
-        <!-- STICKY DASHBOARD -->
-        <div class="dashboard-bar">
-            <div class="search-wrap">
-                <input type="text" placeholder="Cari berdasarkan penulis, judul, atau nama..." />
-            </div>
-
-            <nav class="main-nav">
-                <a href="/FrontEnd/dashboard-logged-in.html">Beranda</a>
-                <a href="#">Bestseller</a>
-                <a href="#">Kategori</a>
-                <a href="#">Temukan Toko</a>
-                <a href="#">Buku Saya</a>
-            </nav>
-        </div>
+        <nav class="main-nav header-nav">
+            <a href="/FrontEnd/dashboard-logged-in.html">Home</a>
+            <a href="#">Bestseller</a>
+            <a href="#">Category</a>
+            <a href="#">Borrower</a>
+            <a href="/FrontEnd/your-books.html">My Books</a>
+        </nav>
     </header>
 
     <!-- PROFILE CONTENT -->
     <main class="profile-main">
         <div class="profile-container">
             <div class="profile-header">
-                <h1>Profil Pengguna</h1>
-                <p>Kelola informasi profil Anda</p>
+                <h1>User Profile</h1>
+                <p>Manage your profile information</p>
             </div>
 
             <div class="profile-card">
-                <!-- Added profile image upload section -->
+                <!-- Profile image upload section -->
                 <div class="profile-image-section">
                     <div class="profile-image-container">
-                        <img id="profileImagePreview" src="/placeholder.svg?height=150&width=150" alt="Profile Image" class="profile-image">
+                        <img id="profileImagePreview" src="/FrontEnd/images/placeholder-profile.png" alt="Profile Image" class="profile-image">
                         <label for="profileImageInput" class="profile-image-edit">
                             <span>📷</span>
                         </label>
                         <input type="file" id="profileImageInput" accept="image/*" style="display: none;">
                     </div>
-                    <p class="profile-image-hint">Klik ikon kamera untuk mengubah foto profil</p>
+                    <p class="profile-image-hint">Click the camera icon to change your profile photo</p>
                 </div>
 
                 <form id="profileForm" class="profile-form">
                     <div class="form-group">
-                        <label for="name">Nama Lengkap</label>
-                        <input type="text" id="name" name="name" placeholder="Masukkan nama lengkap Anda" required>
+                        <label for="name">Username</label>
+                        <input type="text" id="name" name="name" placeholder="Enter your full name" required>
                     </div>
                     <div class="form-group">
                         <label for="email">Email</label>
                         <input type="email" id="email" name="email" disabled>
                     </div>
                     <div class="form-group">
-                        <label for="phone">Nomor Telepon</label>
-                        <input type="tel" id="phone" name="phone" placeholder="Masukkan nomor telepon">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone" name="phone" placeholder="Enter your phone number">
                     </div>
                     <div class="form-group">
-                        <label for="address">Alamat</label>
-                        <textarea id="address" name="address" rows="4" placeholder="Masukkan alamat Anda"></textarea>
+                        <label for="address">Address</label>
+                        <textarea id="address" name="address" rows="4" placeholder="Enter your address"></textarea>
+                    </div>
+                    <!-- Added city, province, and postal code fields -->
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input type="text" id="city" name="city" placeholder="Enter your city">
                     </div>
                     <div class="form-group">
-                        <label for="role">Role</label>
-                        <input type="text" id="role" name="role" disabled>
+                        <label for="province">Province</label>
+                        <select id="province" name="province">
+                            <option value="">Select province</option>
+                            <option value="Aceh">Aceh</option>
+                            <option value="North Sumatra">North Sumatra</option>
+                            <option value="West Sumatra">West Sumatra</option>
+                            <option value="Riau">Riau</option>
+                            <option value="Jambi">Jambi</option>
+                            <option value="South Sumatra">South Sumatra</option>
+                            <option value="Bengkulu">Bengkulu</option>
+                            <option value="Lampung">Lampung</option>
+                            <option value="Bangka Belitung">Bangka Belitung</option>
+                            <option value="Riau Islands">Riau Islands</option>
+                            <option value="Jakarta">Jakarta</option>
+                            <option value="West Java">West Java</option>
+                            <option value="Central Java">Central Java</option>
+                            <option value="Yogyakarta">Yogyakarta</option>
+                            <option value="East Java">East Java</option>
+                            <option value="Banten">Banten</option>
+                            <option value="Bali">Bali</option>
+                            <option value="West Nusa Tenggara">West Nusa Tenggara</option>
+                            <option value="East Nusa Tenggara">East Nusa Tenggara</option>
+                            <option value="West Kalimantan">West Kalimantan</option>
+                            <option value="Central Kalimantan">Central Kalimantan</option>
+                            <option value="South Kalimantan">South Kalimantan</option>
+                            <option value="East Kalimantan">East Kalimantan</option>
+                            <option value="North Kalimantan">North Kalimantan</option>
+                            <option value="North Sulawesi">North Sulawesi</option>
+                            <option value="Central Sulawesi">Central Sulawesi</option>
+                            <option value="South Sulawesi">South Sulawesi</option>
+                            <option value="Southeast Sulawesi">Southeast Sulawesi</option>
+                            <option value="Gorontalo">Gorontalo</option>
+                            <option value="West Sulawesi">West Sulawesi</option>
+                            <option value="Maluku">Maluku</option>
+                            <option value="North Maluku">North Maluku</option>
+                            <option value="Papua">Papua</option>
+                            <option value="West Papua">West Papua</option>
+                        </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                    <div class="form-group">
+                        <label for="postal_code">Postal Code</label>
+                        <input type="text" id="postal_code" name="postal_code" placeholder="Enter your postal code">
+                    </div>
+                    <!-- Removed role field as requested -->
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
                 </form>
             </div>
         </div>
     </main>
 
     <footer class="site-footer">
-        <p>&copy; 2025 LibMatch. Semua hak dilindungi.</p>
+        <nav class="footer-nav">
+            <a href="/FrontEnd/about.html">About</a> | 
+            <a href="/FrontEnd/help.html">Help</a> | 
+            <a href="/FrontEnd/terms.html">Terms</a> | 
+            <a href="/FrontEnd/privacy.html">Privacy</a> |
+            <a href="/FrontEnd/contact.html">Contact</a> 
+        </nav>
+        <p>&copy; 2025 LibMatch. All rights reserved.</p>
     </footer>
 
     <script src="/FrontEnd/js/auth.js"></script>

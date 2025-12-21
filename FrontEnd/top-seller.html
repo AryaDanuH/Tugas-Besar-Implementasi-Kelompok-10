@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top Sellers - LibMatch</title>
+    <link rel="stylesheet" href="/FrontEnd/css/style.css">
+    <style>
+        .top-seller-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 40px;
+        }
+
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .book-card-grid {
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .book-card-grid:hover {
+            transform: translateY(-5px);
+        }
+
+        .book-card-grid img {
+            width: 100%;
+            aspect-ratio: 2 / 3;
+            object-fit: contain;
+            background: #f5f5f5;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .book-card-grid .title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-top: 12px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .book-card-grid .sub {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .no-books-message {
+            text-align: center;
+            padding: 60px 20px;
+            color: #999;
+            font-size: 16px;
+        }
+
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background: transparent;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            color: #333;
+            margin-bottom: 30px;
+            margin-left: -400px; /* Shift left by 20px */
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            color: #7c5cdb;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="header-top">
+            <div class="logo">LibMatch</div>
+            <div class="search-wrap header-search">
+                <input type="text" id="searchInput" placeholder="Search by author, title, or name..." />
+            </div>
+            <div class="right-actions">
+                <a href="/FrontEnd/profile.html" class="profile-avatar-link" id="profileLink" style="display: none;">
+                    <img id="userAvatar" class="profile-avatar-img" src="/FrontEnd/images/placeholder-profile.png" alt="Profile">
+                </a>
+                <button class="logout-btn" id="logoutBtn" onclick="logout()" title="Logout" style="display: none;">Logout</button>
+                <button class="login-btn" id="loginBtn" onclick="window.location.href='/FrontEnd/login.html'" style="display: none;">Login</button>
+                <span class="lang-text">EN</span>
+            </div>
+        </div>
+
+        <nav class="main-nav header-nav">
+            <a href="/FrontEnd/dashboard-logged-in.html" id="homeLink">Home</a>
+            <a href="/FrontEnd/top-seller.html" class="active">Bestseller</a>
+            <a href="/FrontEnd/select-categories.html">Category</a>
+            <a href="/FrontEnd/location.html">Locations</a>
+            <a href="/FrontEnd/your-books.html" id="myBooksLink" style="display: none;">My Books</a>
+        </nav>
+    </header>
+
+    <main class="main-content" style="background: white; min-height: 80vh;">
+        <button class="back-button" onclick="window.history.back()">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+        </button>
+        <div class="top-seller-container">
+            <h1 class="page-title">Top Sellers</h1>
+            <div class="books-grid" id="booksGrid">
+                <!-- Books loaded dynamically -->
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <nav class="footer-nav">
+            <a href="/FrontEnd/about.html">About</a> | 
+            <a href="/FrontEnd/help.html">Help</a> | 
+            <a href="/FrontEnd/terms.html">Terms</a> | 
+            <a href="/FrontEnd/privacy.html">Privacy</a> |
+            <a href="/FrontEnd/contact.html">Contact</a> 
+        </nav>
+        <p>&copy; 2025 LibMatch. All rights reserved.</p>
+    </footer>
+
+    <script src="/FrontEnd/js/auth.js"></script>
+    <script>
+        let allBooks = [];
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            checkAuthAndUpdateUI();
+            await loadTopSellers();
+            setupSearch();
+        });
+
+        function checkAuthAndUpdateUI() {
+            const user = getCurrentUser();
+            if (user) {
+                document.getElementById('logoutBtn').style.display = 'block';
+                document.getElementById('profileLink').style.display = 'block';
+                document.getElementById('myBooksLink').style.display = 'block';
+                document.getElementById('loginBtn').style.display = 'none';
+                document.getElementById('homeLink').href = '/FrontEnd/dashboard-logged-in.html';
+            } else {
+                document.getElementById('logoutBtn').style.display = 'none';
+                document.getElementById('profileLink').style.display = 'none';
+                document.getElementById('myBooksLink').style.display = 'none';
+                document.getElementById('loginBtn').style.display = 'block';
+                document.getElementById('homeLink').href = '/FrontEnd/index.html';
+            }
+        }
+
+        async function loadTopSellers() {
+            try {
+                const response = await fetch(`${API_URL}/books/top-borrowed`);
+                if (!response.ok) throw new Error('Failed to fetch top sellers');
+                
+                allBooks = await response.json();
+                displayBooks(allBooks);
+            } catch (error) {
+                console.error('Error loading top sellers:', error);
+                document.getElementById('booksGrid').innerHTML = '<p class="no-books-message">Error loading books. Please try again later.</p>';
+            }
+        }
+
+        function displayBooks(books) {
+            const grid = document.getElementById('booksGrid');
+            grid.innerHTML = '';
+            
+            if (books.length === 0) {
+                grid.innerHTML = '<p class="no-books-message">No top sellers available at the moment.</p>';
+                return;
+            }
+            
+            books.forEach(book => {
+                const bookCard = document.createElement('div');
+                bookCard.className = 'book-card-grid';
+                
+                const coverImage = book.cover_image || '/FrontEnd/images/book-cover.png';
+                
+                bookCard.innerHTML = `
+                    <img src="${coverImage}" alt="${book.title}" onerror="this.src='/FrontEnd/images/book-cover.png'">
+                    <p class="title">${book.title}</p>
+                    <p class="sub">${book.author}</p>
+                `;
+                
+                bookCard.addEventListener('click', () => {
+                    trackBookView(book.book_id);
+                    window.location.href = `/FrontEnd/public-book-detail.html?id=${book.book_id}`;
+                });
+                
+                grid.appendChild(bookCard);
+            });
+        }
+
+        async function trackBookView(bookId) {
+            try {
+                await fetch(`${API_URL}/books/${bookId}/view`, { method: 'POST' });
+            } catch (error) {
+                console.error('Error tracking view:', error);
+            }
+        }
+
+        function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase();
+                const filtered = allBooks.filter(book => 
+                    book.title.toLowerCase().includes(query) ||
+                    book.author.toLowerCase().includes(query) ||
+                    (book.category_name && book.category_name.toLowerCase().includes(query))
+                );
+                displayBooks(filtered);
+            });
+        }
+    </script>
+</body>
+</html>

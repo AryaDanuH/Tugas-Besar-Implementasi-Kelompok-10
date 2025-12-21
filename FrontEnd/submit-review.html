@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Review - LibMatch</title>
+    <link rel="stylesheet" href="/FrontEnd/css/style.css">
+    <style>
+        .review-container {
+            max-width: 600px;
+            margin: 60px auto;
+            padding: 40px;
+            background: white;
+        }
+
+        .back-arrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: transparent;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            color: #333;
+            margin-bottom: 30px;
+            transition: color 0.3s ease;
+        }
+
+        .back-arrow:hover {
+            color: #163ab6;
+        }
+
+        .review-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .review-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .book-info-compact {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .book-cover-small {
+            width: 80px;
+            height: 110px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .book-details-compact h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .book-details-compact p {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .review-textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+        }
+
+        .review-textarea:focus {
+            outline: none;
+            border-color: #163ab6;
+        }
+
+        .char-count {
+            text-align: right;
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: #163ab6;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: #0f2a8a;
+        }
+
+        .submit-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-top">
+            <div class="logo">LibMatch</div>
+            <div class="right-actions">
+                <a href="/FrontEnd/profile.html" class="profile-avatar-link">
+                    <img id="userAvatar" class="profile-avatar-img" src="/FrontEnd/images/placeholder-profile.png" alt="Profile">
+                </a>
+                <button class="logout-btn" onclick="logout()" title="Logout">Logout</button>
+                <span class="lang-text">EN</span>
+            </div>
+        </div>
+
+        <nav class="main-nav header-nav">
+            <a href="/FrontEnd/dashboard-logged-in.html">Home</a>
+            <a href="#">Bestseller</a>
+            <a href="#">Category</a>
+            <a href="#">Borrower</a>
+            <a href="/FrontEnd/your-books.html" class="active">My Books</a>
+        </nav>
+    </header>
+
+    <main class="main-content" style="background: #f8f9fa; min-height: 80vh;">
+        <div class="review-container">
+            <button class="back-arrow" onclick="window.history.back()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back
+            </button>
+
+            <div class="review-header">
+                <h1 class="review-title">Share Your Thoughts</h1>
+                <p style="color: #666;">How was your experience with this book?</p>
+            </div>
+
+            <div class="book-info-compact">
+                <img id="bookCover" class="book-cover-small" src="/FrontEnd/images/book-cover.png" alt="Book Cover">
+                <div class="book-details-compact">
+                    <h3 id="bookTitle">Loading...</h3>
+                    <p id="bookAuthor">Author</p>
+                </div>
+            </div>
+
+            <form id="reviewForm">
+                <div class="form-group">
+                    <label class="form-label" for="reviewText">Your Review</label>
+                    <textarea 
+                        id="reviewText" 
+                        class="review-textarea" 
+                        placeholder="Share your thoughts about this book..."
+                        maxlength="1000"
+                        required
+                    ></textarea>
+                    <div class="char-count">
+                        <span id="charCount">0</span>/1000 characters
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">Submit Review</button>
+            </form>
+        </div>
+    </main>
+
+    <script src="/FrontEnd/js/auth.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const bookId = urlParams.get('book_id');
+        const borrowId = urlParams.get('borrow_id');
+        let currentBook = null;
+
+        async function loadBookInfo() {
+            const user = getCurrentUser();
+            if (!user || !user.user_id) {
+                window.location.href = '/FrontEnd/login.html';
+                return;
+            }
+
+            if (!bookId) {
+                alert('Book information not found');
+                window.location.href = '/FrontEnd/your-books.html';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/books/${bookId}`);
+                if (!response.ok) throw new Error('Failed to fetch book');
+                
+                currentBook = await response.json();
+
+                document.getElementById('bookTitle').textContent = currentBook.title || 'Untitled';
+                document.getElementById('bookAuthor').textContent = currentBook.author || 'Unknown Author';
+                
+                if (currentBook.cover_image) {
+                    document.getElementById('bookCover').src = currentBook.cover_image;
+                }
+
+                document.title = `Review ${currentBook.title} - LibMatch`;
+            } catch (error) {
+                console.error('Error loading book info:', error);
+                alert('Failed to load book information');
+                window.location.href = '/FrontEnd/your-books.html';
+            }
+        }
+
+        // Character counter
+        document.getElementById('reviewText').addEventListener('input', (e) => {
+            const charCount = e.target.value.length;
+            document.getElementById('charCount').textContent = charCount;
+        });
+
+        // Form submission
+        document.getElementById('reviewForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const user = getCurrentUser();
+            if (!user || !user.user_id) {
+                alert('Please login to submit a review');
+                window.location.href = '/FrontEnd/login.html';
+                return;
+            }
+
+            const reviewText = document.getElementById('reviewText').value.trim();
+            
+            if (!reviewText) {
+                alert('Please write a review');
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            try {
+                const response = await fetch(`${API_URL}/reviews`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        book_id: parseInt(bookId),
+                        user_id: user.user_id,
+                        rating: 5,
+                        comment: reviewText
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to submit review');
+                }
+
+                alert('Thank you for your review!');
+                window.location.href = `/FrontEnd/book-reviews.html?book_id=${bookId}`;
+            } catch (error) {
+                console.error('Error submitting review:', error);
+                alert('Failed to submit review. Please try again.');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Review';
+            }
+        });
+
+        window.addEventListener('load', loadBookInfo);
+    </script>
+</body>
+</html>

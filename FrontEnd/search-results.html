@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results - LibMatch</title>
+    <link rel="stylesheet" href="/FrontEnd/css/style.css">
+</head>
+<body>
+    <header class="site-header">
+        <div class="header-top">
+            <div class="logo">LibMatch</div>
+            <div class="search-wrap header-search">
+                <input type="text" id="searchInput" placeholder="Search by author, title, or name..." />
+            </div>
+            <div class="right-actions">
+                <a href="/FrontEnd/cart.html" class="cart-icon-link" id="cartIcon" style="display: none; margin-right: 15px;">
+                    <img src="/FrontEnd/images/cart.png" alt="Cart" style="width: 28px; height: 28px;">
+                    <span id="cartCount" class="cart-count">0</span>
+                </a>
+                <a href="/FrontEnd/profile.html" class="profile-avatar-link" id="profileLink" style="display: none;">
+                    <img id="userAvatar" class="profile-avatar-img" src="/FrontEnd/images/placeholder-profile.png" alt="Profile">
+                </a>
+                <button class="login-btn" id="loginBtn" onclick="window.location.href='/FrontEnd/login.html'" style="display: none;">Login</button>
+                <button class="logout-btn" id="logoutBtn" onclick="logout()" title="Logout" style="display: none;">Logout</button>
+                <span class="lang-text">EN</span>
+            </div>
+        </div>
+
+        <nav class="main-nav header-nav">
+            <a href="/FrontEnd/dashboard-logged-in.html" id="homeLink">Home</a>
+            <a href="#">Bestseller</a>
+            <a href="#">Category</a>
+            <a href="#">Borrower</a>
+            <a href="/FrontEnd/your-books.html" id="myBooksLink" style="display: none;">My Books</a>
+        </nav>
+    </header>
+
+    <main style="padding: 40px 20px; min-height: 70vh; background: #f8f9fa;">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <div style="margin-bottom: 30px;">
+                <h1 style="font-size: 2rem; margin-bottom: 10px;">Search Results</h1>
+                <p id="searchQuery" style="color: #666; font-size: 1.1rem;"></p>
+                <p id="resultCount" style="color: #999; margin-top: 10px;"></p>
+            </div>
+
+            <div id="resultsGrid" class="bestseller-grid">
+                <!-- Search results will be loaded here -->
+            </div>
+
+            <div id="emptyState" style="display: none; text-align: center; padding: 80px 20px;">
+                <p style="font-size: 1.3rem; color: #999; margin-bottom: 10px;">No books found</p>
+                <p style="font-size: 1rem; color: #bbb;">Try different keywords or browse our categories</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <nav class="footer-nav">
+            <a href="/FrontEnd/about.html">About</a> | 
+            <a href="/FrontEnd/help.html">Help</a> | 
+            <a href="/FrontEnd/terms.html">Terms</a> | 
+            <a href="/FrontEnd/privacy.html">Privacy</a> |
+            <a href="/FrontEnd/contact.html">Contact</a> 
+        </nav>
+        <p>&copy; 2025 LibMatch. Semua hak dilindungi.</p>
+    </footer>
+
+    <script src="/FrontEnd/js/auth.js"></script>
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchQuery = urlParams.get('q');
+        
+        console.log('[v0] Search query from URL:', searchQuery);
+
+        async function initializePage() {
+            const user = getCurrentUser();
+            
+            if (user && user.user_id) {
+                document.getElementById('profileLink').style.display = 'block';
+                document.getElementById('logoutBtn').style.display = 'block';
+                document.getElementById('myBooksLink').style.display = 'block';
+                document.getElementById('cartIcon').style.display = 'flex';
+                document.getElementById('homeLink').href = '/FrontEnd/dashboard-logged-in.html';
+                updateCartCount();
+                
+                if (user.profile_image) {
+                    document.getElementById('userAvatar').src = user.profile_image;
+                }
+            } else {
+                document.getElementById('loginBtn').style.display = 'block';
+                document.getElementById('homeLink').href = '/FrontEnd/index.html';
+            }
+
+            if (!searchQuery || searchQuery.trim() === '') {
+                console.log('[v0] Empty search query, redirecting to home');
+                window.location.href = '/FrontEnd/index.html';
+                return;
+            }
+
+            document.getElementById('searchInput').value = searchQuery;
+            document.getElementById('searchQuery').textContent = `Results for "${searchQuery}"`;
+
+            await performSearch();
+
+            // Search input handler
+            document.getElementById('searchInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    const query = e.target.value.trim();
+                    if (query) {
+                        window.location.href = `/FrontEnd/search-results.html?q=${encodeURIComponent(query)}`;
+                    }
+                }
+            });
+        }
+
+        async function performSearch() {
+            try {
+                if (!searchQuery || searchQuery.trim() === '') {
+                    document.getElementById('emptyState').style.display = 'block';
+                    document.getElementById('resultsGrid').style.display = 'none';
+                    document.getElementById('resultCount').textContent = 'Please enter a search query';
+                    return;
+                }
+
+                console.log('[v0] API_URL:', API_URL);
+                console.log('[v0] Search query:', searchQuery);
+                
+                const searchURL = `${API_URL}/books/search?q=${encodeURIComponent(searchQuery)}`;
+                console.log('[v0] Fetching:', searchURL);
+                
+                const response = await fetch(searchURL);
+                console.log('[v0] Response status:', response.status);
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('[v0] Search error response:', errorText);
+                    throw new Error(`Search failed: ${response.status}`);
+                }
+                
+                const books = await response.json();
+                console.log('[v0] Search results:', books);
+
+                if (!books || books.length === 0) {
+                    document.getElementById('emptyState').style.display = 'block';
+                    document.getElementById('resultsGrid').style.display = 'none';
+                    document.getElementById('resultCount').textContent = 'No results found';
+                    return;
+                }
+
+                document.getElementById('resultCount').textContent = `${books.length} book${books.length !== 1 ? 's' : ''} found`;
+                displayResults(books);
+            } catch (error) {
+                console.error('[v0] Error performing search:', error);
+                document.getElementById('emptyState').style.display = 'block';
+                document.getElementById('resultsGrid').style.display = 'none';
+                document.getElementById('resultCount').textContent = 'An error occurred while searching';
+            }
+        }
+
+        function displayResults(books) {
+            const container = document.getElementById('resultsGrid');
+            container.innerHTML = '';
+
+            books.forEach(book => {
+                const bookCard = document.createElement('div');
+                bookCard.className = 'book-card-large';
+                bookCard.style.cursor = 'pointer';
+                
+                const coverImage = book.cover_image || '/FrontEnd/images/book-cover.png';
+                
+                bookCard.innerHTML = `
+                    <img src="${coverImage}" alt="${book.title}" onerror="this.src='/FrontEnd/images/book-cover.png'">
+                    <p class="title">${book.title}</p>
+                    <p class="sub">${book.author}</p>
+                `;
+                
+                bookCard.addEventListener('click', () => {
+                    window.location.href = `/FrontEnd/public-book-detail.html?id=${book.book_id}`;
+                });
+                
+                container.appendChild(bookCard);
+            });
+        }
+
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('libmatch_cart') || '[]');
+            const cartCount = document.getElementById('cartCount');
+            if (cartCount) {
+                cartCount.textContent = cart.length;
+            }
+        }
+
+        window.addEventListener('load', initializePage);
+    </script>
+</body>
+</html>

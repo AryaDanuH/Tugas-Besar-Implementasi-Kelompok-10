@@ -1,331 +1,164 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buku Saya - LibMatch</title>
+    <title>My Books - LibMatch</title>
     <link rel="stylesheet" href="/FrontEnd/css/style.css">
     <style>
-        /* Your Books Page Specific Styles */
-        .your-books-header {
-            background: linear-gradient(135deg, #e9d9c4 0%, #f2e6da 100%);
-            padding: 30px 20px;
-            text-align: center;
-            border-bottom: 3px solid #c7a27c;
-        }
-
-        .your-books-header h1 {
-            font-size: 32px;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 8px;
-        }
-
-        .your-books-header p {
-            color: #666;
-            font-size: 16px;
-        }
-
-        .your-books-container {
-            max-width: 1100px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-
-        .your-books-tabs {
+        .tabs-container {
             display: flex;
-            gap: 20px;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 15px;
+            gap: 30px;
+            padding: 20px 40px;
+            border-bottom: 1px solid #e0e0e0;
+            background: white;
         }
 
-        .your-books-tabs button {
-            background: none;
-            border: none;
-            font-size: 16px;
-            font-weight: 600;
-            color: #999;
+        .tab {
             cursor: pointer;
-            padding: 8px 0;
-            transition: all 0.3s;
-            position: relative;
+            font-size: 14px;
+            color: #999;
+            padding-bottom: 15px;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
         }
 
-        .your-books-tabs button.active {
-            color: #c7a27c;
-        }
-
-        .your-books-tabs button.active::after {
-            content: '';
-            position: absolute;
-            bottom: -17px;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: #c7a27c;
-        }
-
-        .your-books-tabs button:hover {
+        .tab.active {
             color: #333;
+            border-bottom-color: #7c5cdb;
         }
 
         .books-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 24px;
-            margin-top: 30px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            padding: 40px;
+            background: white;
         }
 
         .book-item {
-            background: #fff;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
             cursor: pointer;
+            position: relative;
         }
 
-        .book-item:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
-        }
-
-        .book-item-image {
-            width: 100%;
-            height: 240px;
-            object-fit: cover;
+        .book-cover {
+            width: 150px;
+            height: 200px;
             background: #f5f5f5;
-        }
-
-        .book-item-info {
-            padding: 16px;
-        }
-
-        .book-item-title {
-            font-size: 15px;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 6px;
-            line-height: 1.3;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
+            border-radius: 8px;
             overflow: hidden;
+            margin-bottom: 15px;
+            position: relative;
         }
 
-        .book-item-author {
-            font-size: 13px;
-            color: #999;
-            margin-bottom: 12px;
+        .book-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
-        .book-item-status {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
+        .book-cover.grayed {
+            filter: grayscale(100%) opacity(0.5);
+        }
+
+        .book-title {
             font-weight: 600;
-            background: #f0f0f0;
-            color: #666;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 5px;
         }
 
-        .book-item-status.borrowed {
-            background: #e8f5e9;
-            color: #2e7d32;
+        .book-author {
+            font-size: 12px;
+            color: #999;
         }
 
-        .book-item-status.returned {
-            background: #fff3e0;
-            color: #e65100;
+        .book-status {
+            font-size: 11px;
+            margin-top: 5px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status-icon {
+            width: 16px;
+            height: 16px;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-accepted {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .add-book-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 150px;
+            height: 200px;
+            background: #e8e8e8;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 48px;
+            color: #999;
+            transition: all 0.3s ease;
+        }
+
+        .add-book-btn:hover {
+            background: #d0d0d0;
         }
 
         .empty-state {
             text-align: center;
-            padding: 60px 20px;
-        }
-
-        .empty-state-icon {
-            font-size: 64px;
-            margin-bottom: 20px;
-        }
-
-        .empty-state-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 10px;
-        }
-
-        .empty-state-text {
+            padding: 60px 40px;
             color: #999;
             font-size: 16px;
-            margin-bottom: 30px;
         }
 
-        .empty-state-btn {
-            background: #c7a27c;
-            color: #fff;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .empty-state-btn:hover {
-            background: #b8935a;
-        }
-
-        .book-details-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .book-details-modal.active {
-            display: flex;
-        }
-
-        .book-details-content {
-            background: #fff;
-            border-radius: 12px;
-            padding: 30px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-            position: relative;
-        }
-
-        .book-details-close {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: none;
-            border: none;
-            font-size: 28px;
-            cursor: pointer;
-            color: #999;
-        }
-
-        .book-details-image {
-            width: 100%;
-            height: 300px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-
-        .book-details-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 8px;
-        }
-
-        .book-details-author {
-            font-size: 16px;
-            color: #c7a27c;
-            margin-bottom: 20px;
-        }
-
-        .book-details-info {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 20px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #eee;
-        }
-
-        .book-details-info-item {
-            display: flex;
-            justify-content: space-between;
-            font-size: 14px;
-        }
-
-        .book-details-info-label {
-            color: #999;
-            font-weight: 600;
-        }
-
-        .book-details-info-value {
-            color: #333;
-            font-weight: 600;
-        }
-
-        .book-details-actions {
-            display: flex;
-            gap: 12px;
-        }
-
-        .book-details-actions button {
-            flex: 1;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-primary-action {
-            background: #c7a27c;
-            color: #fff;
-        }
-
-        .btn-primary-action:hover {
-            background: #b8935a;
-        }
-
-        .btn-secondary-action {
-            background: #f0f0f0;
-            color: #333;
-            border: 1px solid #ddd;
-        }
-
-        .btn-secondary-action:hover {
-            background: #e8e8e8;
+        @media (max-width: 1200px) {
+            .books-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
         }
 
         @media (max-width: 768px) {
             .books-grid {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-                gap: 16px;
-            }
-
-            .your-books-header h1 {
-                font-size: 24px;
-            }
-
-            .book-details-content {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
                 padding: 20px;
+            }
+
+            .tabs-container {
+                padding: 15px 20px;
             }
         }
 
-        @media (max-width: 480px) {
-            .books-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 12px;
-            }
+        .tab-content {
+            display: none;
+        }
 
-            .your-books-tabs {
-                gap: 12px;
-                font-size: 14px;
-            }
-
-            .book-item-image {
-                height: 180px;
-            }
+        .tab-content.active {
+            display: grid;
         }
     </style>
 </head>
@@ -335,201 +168,462 @@
         <div class="header-top">
             <div class="logo">LibMatch</div>
             <div class="right-actions">
-                <button class="calendar-btn" onclick="alert('Fitur kalender segera hadir')">📅</button>
+                <a href="/FrontEnd/cart.html" class="cart-icon-link" style="margin-right: 15px;">
+                    <img src="/FrontEnd/images/cart.png" alt="Cart" style="width: 28px; height: 28px; cursor: pointer;">
+                </a>
                 <a href="/FrontEnd/profile.html" class="profile-avatar-link">
-                    <img id="profileImageDisplay" src="/placeholder.svg?height=40&width=40" alt="Profile" class="profile-avatar">
+                    <!-- Replaced initial-avatar div with img tag for profile picture -->
+                    <img id="userAvatar" class="profile-avatar-img" src="/FrontEnd/images/placeholder-profile.png" alt="Profile">
                 </a>
                 <button class="logout-btn" onclick="logout()" title="Logout">Logout</button>
-                <span class="lang-text">ID</span>
+                <span class="lang-text">EN</span>
             </div>
         </div>
 
-        <!-- STICKY DASHBOARD -->
-        <div class="dashboard-bar">
-            <div class="search-wrap">
-                <input type="text" placeholder="Cari berdasarkan penulis, judul, atau nama..." />
-            </div>
-
-            <nav class="main-nav">
-                <a href="/FrontEnd/dashboard-logged-in.html">Beranda</a>
-                <a href="/FrontEnd/dashboard-logged-in.html" onclick="showFeature('bestseller')">Bestseller</a>
-                <a href="/FrontEnd/dashboard-logged-in.html" onclick="showFeature('kategori')">Kategori</a>
-                <a href="/FrontEnd/dashboard-logged-in.html" onclick="showFeature('find-store')">Temukan Toko</a>
-                <a href="/FrontEnd/your-books.html" class="active">Buku Saya</a>
-            </nav>
-        </div>
+        <nav class="main-nav header-nav">
+            <a href="/FrontEnd/dashboard-logged-in.html">Home</a>
+            <a href="/FrontEnd/top-seller.html">Bestseller</a>
+            <a href="/FrontEnd/select-categories.html">Category</a>
+            <a href="/FrontEnd/location.html">Locations</a>
+            <a href="/FrontEnd/your-books.html" class="active">My Books</a>
+        </nav>
     </header>
 
-    <!-- YOUR BOOKS HEADER -->
-    <div class="your-books-header">
-        <h1>Buku Saya</h1>
-        <p>Kelola dan lihat koleksi buku Anda</p>
-    </div>
+    <main class="main-content" style="background: white; min-height: 80vh;">
+        <div style="padding: 40px;">
+            <div class="tabs-container">
+                <div class="tab active" onclick="switchBookTab('mybooks')">My Books</div>
+                <div class="tab" onclick="switchBookTab('loaning')">Books I'm Loaning</div>
+                <div class="tab" onclick="switchBookTab('loaned')">Books I've Loaned</div>
+            </div>
 
-    <!-- YOUR BOOKS CONTENT -->
-    <div class="your-books-container">
-        <!-- TABS -->
-        <div class="your-books-tabs">
-            <button class="tab-btn active" data-tab="all">Semua Buku</button>
-            <button class="tab-btn" data-tab="borrowed">Sedang Dipinjam</button>
-            <button class="tab-btn" data-tab="returned">Sudah Dikembalikan</button>
-        </div>
-
-        <!-- BOOKS GRID -->
-        <div id="booksGrid" class="books-grid">
-            <!-- Books will be loaded here -->
-        </div>
-
-        <!-- EMPTY STATE -->
-        <div id="emptyState" class="empty-state" style="display: none;">
-            <div class="empty-state-icon">📚</div>
-            <h2 class="empty-state-title">Belum Ada Buku</h2>
-            <p class="empty-state-text">Anda belum memiliki buku dalam koleksi ini</p>
-            <button class="empty-state-btn" onclick="window.location.href='/FrontEnd/dashboard-logged-in.html'">Jelajahi Buku</button>
-        </div>
-    </div>
-
-    <!-- BOOK DETAILS MODAL -->
-    <div id="bookDetailsModal" class="book-details-modal">
-        <div class="book-details-content">
-            <button class="book-details-close" onclick="closeBookDetails()">✕</button>
-            <img id="modalBookImage" src="/placeholder.svg" alt="Book" class="book-details-image">
-            <h2 id="modalBookTitle" class="book-details-title"></h2>
-            <p id="modalBookAuthor" class="book-details-author"></p>
-            
-            <div class="book-details-info">
-                <div class="book-details-info-item">
-                    <span class="book-details-info-label">Status:</span>
-                    <span id="modalBookStatus" class="book-details-info-value"></span>
-                </div>
-                <div class="book-details-info-item">
-                    <span class="book-details-info-label">Tanggal Pinjam:</span>
-                    <span id="modalBookBorrowDate" class="book-details-info-value"></span>
-                </div>
-                <div class="book-details-info-item">
-                    <span class="book-details-info-label">Tanggal Kembali:</span>
-                    <span id="modalBookReturnDate" class="book-details-info-value"></span>
-                </div>
-                <div class="book-details-info-item">
-                    <span class="book-details-info-label">Kategori:</span>
-                    <span id="modalBookCategory" class="book-details-info-value"></span>
+            <div style="display: flex; justify-content: center; margin: 30px 40px 20px;">
+                <div class="search-wrap header-search">
+                    <input type="text" id="searchInput" placeholder="Search by author, title, or name..." oninput="handleSearch()" />
                 </div>
             </div>
 
-            <div class="book-details-actions">
-                <button class="btn-primary-action" onclick="renewBook()">Perpanjang Peminjaman</button>
-                <button class="btn-secondary-action" onclick="closeBookDetails()">Tutup</button>
+            <div id="mybooksTab" class="tab-content active">
+                <h1 style="margin-bottom: 30px; margin-left: 40px; font-size: 28px; color: #333;">My Books</h1>
+                <div class="books-grid" id="booksContainer">
+                    <p class="empty-state">Loading your books...</p>
+                </div>
+                <div style="text-align: center; margin-top: 40px;">
+                    <a href="/FrontEnd/upload-book.html" class="add-book-btn" style="width: auto; height: auto; padding: 15px 30px; text-decoration: none; background: #7c5cdb; color: white; border-radius: 8px; font-size: 16px;">
+                        + Add New Book
+                    </a>
+                </div>
+            </div>
+
+            <div id="loaningTab" class="tab-content">
+                <h1 style="margin-bottom: 30px; margin-left: 40px; font-size: 28px; color: #333;">Books I'm Loaning</h1>
+                <div class="books-grid" id="loaningContainer">
+                    <p class="empty-state">You haven't borrowed any books yet.</p>
+                </div>
+            </div>
+
+            <div id="loanedTab" class="tab-content">
+                <h1 style="margin-bottom: 30px; margin-left: 40px; font-size: 28px; color: #333;">Books I've Loaned</h1>
+                <div class="books-grid" id="loanedContainer">
+                    <p class="empty-state">No loan history yet.</p>
+                </div>
             </div>
         </div>
-    </div>
+    </main>
 
     <footer class="site-footer">
-        <p>&copy; 2025 LibMatch. Semua hak dilindungi.</p>
+        <nav class="footer-nav">
+            <a href="/FrontEnd/about.html">About</a> | 
+            <a href="/FrontEnd/help.html">Help</a> | 
+            <a href="/FrontEnd/terms.html">Terms</a> | 
+            <a href="/FrontEnd/privacy.html">Privacy</a> |
+            <a href="/FrontEnd/contact.html">Contact</a> 
+        </nav>
+        <p>&copy; 2025 LibMatch. All rights reserved.</p>
     </footer>
 
     <script src="/FrontEnd/js/auth.js"></script>
     <script>
         let allBooks = [];
-        let currentTab = 'all';
+        let loaningBooks = [];
+        let loanedBooks = [];
+        let currentBookTab = 'mybooks';
 
-        // Check authentication on page load
-        document.addEventListener("DOMContentLoaded", () => {
-            const user = getCurrentUser();
-            if (!user) {
-                window.location.href = "/FrontEnd/login.html";
-            } else {
-                if (user.profile_image) {
-                    document.getElementById("profileImageDisplay").src = user.profile_image;
-                }
-                loadUserBooks();
+        function switchBookTab(tab) {
+            currentBookTab = tab;
+            
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            if (tab === 'mybooks') {
+                document.querySelectorAll('.tab')[0].classList.add('active');
+                document.getElementById('mybooksTab').classList.add('active');
+            } else if (tab === 'loaning') {
+                document.querySelectorAll('.tab')[1].classList.add('active');
+                document.getElementById('loaningTab').classList.add('active');
+                loadLoaningBooks();
+            } else if (tab === 'loaned') {
+                document.querySelectorAll('.tab')[2].classList.add('active');
+                document.getElementById('loanedTab').classList.add('active');
+                loadLoanedBooks();
+            }
+        }
+
+        function initPage() {
+            const user = getCurrentUser()
+            if (!user || !user.user_id) {
+                window.location.href = "/FrontEnd/login.html"
+                return
             }
 
-            // Tab switching
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                    e.target.classList.add('active');
-                    currentTab = e.target.dataset.tab;
-                    filterBooks();
-                });
-            });
-        });
+            const avatar = document.getElementById("userAvatar")
+            if (avatar && user.name) {
+                avatar.alt = user.name.charAt(0).toUpperCase()
+            }
 
-        async function loadUserBooks() {
+            loadUserBooks(user.user_id)
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const tab = urlParams.get('tab');
+            if (tab) {
+                switchBookTab(tab);
+            }
+        }
+
+        async function loadUserBooks(userId) {
             try {
-                const user = getCurrentUser();
-                const response = await fetch(`${API_URL}/borrow/user/${user.id}`);
-                const data = await response.json();
-
-                if (response.ok && data.success) {
-                    allBooks = data.data || [];
-                    filterBooks();
-                } else {
-                    showNotification("Gagal memuat buku", "error");
+                const response = await fetch(`/api/users/${userId}/books`)
+                
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Failed to fetch books: ${response.status} ${errorText}`)
                 }
+
+                const books = await response.json()
+                allBooks = books || [];
+                displayBooks(allBooks);
             } catch (error) {
-                console.error("Error loading books:", error);
-                showNotification("Terjadi kesalahan: " + error.message, "error");
+                console.error('Error loading books:', error)
+                const container = document.getElementById("booksContainer")
+                container.innerHTML = '<div class="empty-state" style="grid-column: 1/-1;">Error loading your books. Please try again.</div>'
             }
         }
 
-        function filterBooks() {
-            const grid = document.getElementById('booksGrid');
-            const emptyState = document.getElementById('emptyState');
+        async function loadLoaningBooks() {
+            const user = getCurrentUser();
+            if (!user || !user.user_id) return;
+
+            try {
+                const response = await fetch(`/api/users/${user.user_id}/borrowed-books`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch borrowed books');
+                }
+
+                const borrowedBooks = await response.json();
+                
+                loaningBooks = borrowedBooks.filter(book => book.status === 'active');
+                displayLoaningBooks();
+            } catch (error) {
+                console.error('Error loading loaning books:', error);
+                document.getElementById('loaningContainer').innerHTML = 
+                    '<div class="empty-state" style="grid-column: 1/-1;">Error loading borrowed books. Please try again.</div>';
+            }
+        }
+
+        async function loadLoanedBooks() {
+            const user = getCurrentUser();
+            if (!user || !user.user_id) return;
+
+            try {
+                const response = await fetch(`/api/users/${user.user_id}/borrowed-books`);
+                if (!response.ok) {
+                    throw new Error('Failed to fetch borrowed books');
+                }
+
+                const borrowedBooks = await response.json();
+                loanedBooks = borrowedBooks.filter(book => book.status === 'returned');
+                await checkReviewsForBooks();
+                displayLoanedBooks();
+            } catch (error) {
+                console.error('Error loading loaned books:', error);
+                document.getElementById('loanedContainer').innerHTML = 
+                    '<div class="empty-state" style="grid-column: 1/-1;">Error loading loan history. Please try again.</div>';
+            }
+        }
+
+        async function checkReviewsForBooks() {
+            const user = getCurrentUser();
+            if (!user || !user.user_id) return;
+
+            for (let book of loanedBooks) {
+                try {
+                    const response = await fetch(`${API_URL}/reviews/book/${book.book_id}`);
+                    if (response.ok) {
+                        const reviews = await response.json();
+                        // Check if current user has already reviewed this book
+                        book.hasUserReview = reviews.some(review => review.user_id === user.user_id);
+                    } else {
+                        book.hasUserReview = false;
+                    }
+                } catch (error) {
+                    console.error('Error checking reviews:', error);
+                    book.hasUserReview = false;
+                }
+            }
+        }
+
+        function displayLoaningBooks() {
+            const container = document.getElementById("loaningContainer");
             
-            let filtered = allBooks;
-            
-            if (currentTab === 'borrowed') {
-                filtered = allBooks.filter(book => book.status === 'borrowed');
-            } else if (currentTab === 'returned') {
-                filtered = allBooks.filter(book => book.status === 'returned');
+            if (loaningBooks.length === 0) {
+                container.innerHTML = '<div class="empty-state" style="grid-column: 1/-1;">You haven\'t borrowed any books yet.</div>';
+                return;
             }
 
-            if (filtered.length === 0) {
-                grid.style.display = 'none';
-                emptyState.style.display = 'block';
-            } else {
-                grid.style.display = 'grid';
-                emptyState.style.display = 'none';
-                grid.innerHTML = filtered.map(book => `
-                    <div class="book-item" onclick="openBookDetails(${JSON.stringify(book).replace(/"/g, '&quot;')})">
-                        <img src="${book.book_image || '/placeholder.svg?height=240&width=180'}" alt="${book.book_title}" class="book-item-image">
-                        <div class="book-item-info">
-                            <p class="book-item-title">${book.book_title}</p>
-                            <p class="book-item-author">${book.book_author}</p>
-                            <span class="book-item-status ${book.status}">${book.status === 'borrowed' ? 'Sedang Dipinjam' : 'Sudah Dikembalikan'}</span>
-                        </div>
+            container.innerHTML = "";
+            loaningBooks.forEach(book => {
+                const bookCard = document.createElement("div");
+                bookCard.className = "book-item";
+                bookCard.onclick = () => {
+                    // Pass borrow_id as query parameter
+                    window.location.href = `/FrontEnd/borrowed-book-detail.html?borrow_id=${book.borrow_id}`;
+                };
+                
+                bookCard.innerHTML = `
+                    <div class="book-cover">
+                        <img src="${book.cover_image || '/FrontEnd/images/book-cover.png'}" alt="${book.title}">
                     </div>
-                `).join('');
-            }
+                    <div class="book-title">${book.title}</div>
+                    <div class="book-author">${book.author}</div>
+                    <div style="font-size: 11px; color: #7c5cdb; margin-top: 5px;">Due: ${formatReturnDate(book.due_date)}</div>
+                `;
+                container.appendChild(bookCard);
+            });
         }
 
-        function openBookDetails(book) {
-            document.getElementById('modalBookImage').src = book.book_image || '/placeholder.svg?height=300&width=400';
-            document.getElementById('modalBookTitle').textContent = book.book_title;
-            document.getElementById('modalBookAuthor').textContent = book.book_author;
-            document.getElementById('modalBookStatus').textContent = book.status === 'borrowed' ? 'Sedang Dipinjam' : 'Sudah Dikembalikan';
-            document.getElementById('modalBookBorrowDate').textContent = new Date(book.start_date).toLocaleDateString('id-ID');
-            document.getElementById('modalBookReturnDate').textContent = book.end_date ? new Date(book.end_date).toLocaleDateString('id-ID') : '-';
-            document.getElementById('modalBookCategory').textContent = book.book_category || 'Umum';
+        function displayLoanedBooks() {
+            const container = document.getElementById("loanedContainer");
             
-            document.getElementById('bookDetailsModal').classList.add('active');
-        }
-
-        function closeBookDetails() {
-            document.getElementById('bookDetailsModal').classList.remove('active');
-        }
-
-        function renewBook() {
-            showNotification("Fitur perpanjangan segera hadir", "success");
-        }
-
-        // Close modal when clicking outside
-        document.getElementById('bookDetailsModal').addEventListener('click', (e) => {
-            if (e.target.id === 'bookDetailsModal') {
-                closeBookDetails();
+            if (loanedBooks.length === 0) {
+                container.innerHTML = '<div class="empty-state" style="grid-column: 1/-1;">No loan history yet.</div>';
+                return;
             }
-        });
+
+            container.innerHTML = "";
+            loanedBooks.forEach(book => {
+                const bookCard = document.createElement("div");
+                bookCard.className = "book-item";
+                
+                const returnDateText = formatReturnDate(book.return_date);
+                
+                const reviewButtonHTML = !book.hasUserReview ? `
+                    <button onclick="event.stopPropagation(); window.location.href='/FrontEnd/submit-review.html?book_id=${book.book_id}&borrow_id=${book.borrow_id}';" 
+                            style="margin-top: 10px; padding: 8px 16px; background: #7c5cdb; color: white; border: none; border-radius: 6px; font-size: 12px; cursor: pointer; transition: background 0.3s ease;"
+                            onmouseover="this.style.background='#6247b8'" 
+                            onmouseout="this.style.background='#7c5cdb'">
+                        Write Review
+                    </button>
+                ` : '';
+                
+                bookCard.innerHTML = `
+                    <div class="book-cover grayed">
+                        <img src="${book.cover_image || '/FrontEnd/images/book-cover.png'}" alt="${book.title}">
+                    </div>
+                    <div class="book-title">${book.title}</div>
+                    <div class="book-author">${book.author}</div>
+                    <div style="font-size: 11px; color: #999; margin-top: 5px;">Returned: ${returnDateText}</div>
+                    ${reviewButtonHTML}
+                `;
+                container.appendChild(bookCard);
+            });
+        }
+
+        function displayBooks(books) {
+            const container = document.getElementById("booksContainer")
+
+            if (!books || books.length === 0) {
+                container.innerHTML = '<div class="empty-state" style="grid-column: 1/-1;">You haven\'t uploaded any books yet. <a href="/FrontEnd/upload-book.html" style="color: #7c5cdb; text-decoration: underline;">Upload one now!</a></div>'
+                return
+            }
+
+            container.innerHTML = ""
+
+            books.forEach(book => {
+                const bookCard = document.createElement("div")
+                bookCard.className = "book-item"
+                bookCard.style.cursor = "pointer"
+                bookCard.onclick = () => {
+                    window.location.href = `/FrontEnd/book-detail.html?id=${book.book_id}`
+                }
+                
+                let statusBadge = '/FrontEnd/images/Pending.png'
+                let statusText = 'Pending'
+                let statusClass = 'status-pending'
+                
+                if (book.status === 'accepted') {
+                    statusBadge = '/FrontEnd/images/Accepted.png'
+                    statusText = 'Accepted'
+                    statusClass = 'status-accepted'
+                } else if (book.status === 'rejected') {
+                    statusBadge = '/FrontEnd/images/Rejected.png'
+                    statusText = 'Rejected'
+                    statusClass = 'status-rejected'
+                }
+                
+                bookCard.innerHTML = `
+                    <div class="book-cover">
+                        <img src="${book.cover_image || '/FrontEnd/images/book-cover.png'}" alt="${book.title}" onerror="this.src='/FrontEnd/images/placeholder-Image.png'">
+                    </div>
+                    <div class="book-title">${book.title}</div>
+                    <div class="book-author">${book.author}</div>
+                    <div class="book-status ${statusClass}">
+                        <img src="${statusBadge}" class="status-icon" alt="${statusText}">
+                        ${statusText}
+                    </div>
+                `
+                container.appendChild(bookCard)
+            })
+        }
+
+        function handleSearch() {
+            const searchInput = document.getElementById('searchInput');
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            
+            if (!searchTerm) {
+                if (currentBookTab === 'mybooks') displayBooks(allBooks);
+                else if (currentBookTab === 'loaning') displayLoaningBooks();
+                else if (currentBookTab === 'loaned') displayLoanedBooks();
+                return;
+            }
+            
+            let booksToFilter = currentBookTab === 'mybooks' ? allBooks : 
+                               currentBookTab === 'loaning' ? loaningBooks : loanedBooks;
+            
+            const filteredBooks = booksToFilter.filter(book => {
+                return (
+                    (book.title && book.title.toLowerCase().includes(searchTerm)) ||
+                    (book.author && book.author.toLowerCase().includes(searchTerm)) ||
+                    (book.category_name && book.category_name.toLowerCase().includes(searchTerm))
+                );
+            });
+            
+            if (filteredBooks.length === 0) {
+                const containerId = currentBookTab === 'mybooks' ? 'booksContainer' :
+                                   currentBookTab === 'loaning' ? 'loaningContainer' : 'loanedContainer';
+                document.getElementById(containerId).innerHTML = '<div class="empty-state" style="grid-column: 1/-1;">No books found matching your search.</div>';
+            } else {
+                if (currentBookTab === 'mybooks') displayBooks(filteredBooks);
+                else if (currentBookTab === 'loaning') {
+                    loaningBooks = filteredBooks;
+                    displayLoaningBooks();
+                }
+                else {
+                    loanedBooks = filteredBooks;
+                    displayLoanedBooks();
+                }
+            }
+        }
+
+        window.addEventListener("load", initPage)
+
+        function formatReturnDate(dateString) {
+            console.log('[v0] formatReturnDate input:', dateString, 'type:', typeof dateString);
+            
+            if (!dateString) return 'Not Returned';
+            
+            // Handle objects with String property (capitalized)
+            if (typeof dateString === 'object' && dateString !== null && dateString.String) {
+                const isoString = dateString.String;
+                try {
+                    const date = new Date(isoString);
+                    if (isNaN(date.getTime())) {
+                        return 'Invalid Date';
+                    }
+                    return date.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                    });
+                } catch (error) {
+                    return 'Invalid Date';
+                }
+            }
+            
+            // If it's already a Date object, use it directly
+            if (dateString instanceof Date) {
+                if (isNaN(dateString.getTime())) {
+                    return 'Invalid Date';
+                }
+                return dateString.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+            }
+            
+            // If it's an object (like {_seconds, _nanoseconds} from Firestore or similar), extract timestamp
+            if (typeof dateString === 'object') {
+                // Handle Firestore Timestamp objects
+                if (dateString._seconds !== undefined) {
+                    dateString = new Date(dateString._seconds * 1000);
+                    return dateString.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                    });
+                }
+                // Handle other timestamp formats
+                if (dateString.seconds !== undefined) {
+                    dateString = new Date(dateString.seconds * 1000);
+                    return dateString.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                    });
+                }
+                // If object has a toDate method (Firestore Timestamp)
+                if (typeof dateString.toDate === 'function') {
+                    dateString = dateString.toDate();
+                    return dateString.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                    });
+                }
+                
+                return 'Invalid Date';
+            }
+            
+            try {
+                let date;
+                
+                // Handle various date formats from backend
+                if (typeof dateString === 'string' && dateString.includes('T')) {
+                    // ISO format: "2025-12-10T00:00:00Z"
+                    date = new Date(dateString);
+                } else if (typeof dateString === 'string' && dateString.includes('-')) {
+                    // SQL DATE format: "2025-12-10"
+                    // Add time to avoid timezone issues
+                    date = new Date(dateString + 'T00:00:00');
+                } else {
+                    // Try direct parse
+                    date = new Date(dateString);
+                }
+                
+                // Check if date is valid
+                if (isNaN(date.getTime())) {
+                    return 'Invalid Date';
+                }
+                
+                return date.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                });
+            } catch (error) {
+                return 'Invalid Date';
+            }
+        }
     </script>
 </body>
 </html>
