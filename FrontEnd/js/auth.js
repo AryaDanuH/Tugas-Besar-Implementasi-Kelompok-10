@@ -57,7 +57,7 @@ if (registerForm) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        name: email.split("@")[0], // Use email prefix as name
+        name: email.split("@")[0],
         email,
         password,
         phone: "",
