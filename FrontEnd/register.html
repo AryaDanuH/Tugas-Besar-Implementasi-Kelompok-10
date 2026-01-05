@@ -7,22 +7,17 @@
     <link rel="stylesheet" href="/FrontEnd/css/style.css">
 </head>
 <body>
-    <!-- Changed to split layout similar to login page with character illustration on left -->
     <div class="login-container">
-        <!-- Left Section with Character -->
         <div class="login-left">
-            <!-- Changed back button to use window.location.href='/' for reliable navigation to dashboard -->
             <h1 class="brand">LibMatch</h1>
             <img src="/FrontEnd/images/login-character.png" alt="LibMatch Character" class="login-illustration" />
         </div>
 
-        <!-- Right Section with Form -->
         <div class="login-right">
             <div class="login-box">
                 <h2>CREATE YOUR OWN ACCOUNT</h2>
                 <p class="welcome-text">Welcome to LIBMATCH</p>
 
-                <!-- Simplified form to only require email and password -->
                 <form id="registerForm" class="form">
                     <div class="form-group">
                         <input type="email" id="email" name="email" placeholder="Your Email" required>

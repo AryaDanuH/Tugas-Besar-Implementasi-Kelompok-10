@@ -360,7 +360,6 @@
                     const response = await fetch(`${API_URL}/reviews/book/${book.book_id}`);
                     if (response.ok) {
                         const reviews = await response.json();
-                        // Check if current user has already reviewed this book
                         book.hasUserReview = reviews.some(review => review.user_id === user.user_id);
                     } else {
                         book.hasUserReview = false;
@@ -385,7 +384,6 @@
                 const bookCard = document.createElement("div");
                 bookCard.className = "book-item";
                 bookCard.onclick = () => {
-                    // Pass borrow_id as query parameter
                     window.location.href = `/FrontEnd/borrowed-book-detail.html?borrow_id=${book.borrow_id}`;
                 };
                 
