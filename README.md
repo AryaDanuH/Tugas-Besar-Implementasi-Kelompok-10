@@ -223,12 +223,6 @@ Untuk kontribusi, silakan:
 
 Project ini dibuat untuk keperluan akademik.
 
-## Kontak
-
-Untuk pertanyaan atau feedback, silakan hubungi melalui:
-- Email: libmatch@example.com
-- GitHub Issues: [Create Issue]
-
 ---
 
 **Dibuat dengan ❤️ oleh Tim LibMatch**
