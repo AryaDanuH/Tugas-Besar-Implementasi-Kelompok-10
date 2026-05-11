@@ -201,24 +201,6 @@ CREATE DATABASE libmatch;
 USE libmatch;
 SOURCE BackEnd/database/schema.sql;
 ```
-
-## Fitur yang Akan Datang
-
-- [ ] View count tracking untuk popular books
-- [ ] Recommendation system berdasarkan history
-- [ ] Email notification untuk peminjaman
-- [ ] Mobile app version
-- [ ] Payment integration untuk deposit
-
-## Kontribusi
-
-Untuk kontribusi, silakan:
-1. Fork repository
-2. Buat branch untuk fitur (`git checkout -b feature/AmazingFeature`)
-3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push ke branch (`git push origin feature/AmazingFeature`)
-5. Buka Pull Request
-
 ## License
 
 Project ini dibuat untuk keperluan akademik.
