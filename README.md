@@ -1,6 +1,6 @@
 # LibMatch - Sistem Manajemen Perpustakaan
 
-LibMatch adalah aplikasi web full-stack untuk manajemen perpustakaan yang memungkinkan pengguna meminjam buku, memberikan review, dan admin untuk mengelola katalog buku.
+LibMatch adalah aplikasi web full-stack untuk peminjaman buku, memberikan review, dan admin untuk mengelola katalog buku.
 
 ## Fitur Utama
 
