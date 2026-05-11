@@ -206,5 +206,3 @@ SOURCE BackEnd/database/schema.sql;
 Project ini dibuat untuk keperluan akademik.
 
 ---
-
-**Dibuat dengan ❤️ oleh Tim LibMatch**
